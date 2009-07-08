@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+  <HEAD>
+    <TITLE>Mikko Nummelin - Tutkimus ja erikoisty&ouml;t</TITLE>
+    <META name="Author" content="Mikko Nummelin">
+    <META name="keywords" content="Mikko Nummelin, kotisivu, numeerinen laskenta,
+    Lindenmeyer, konformikuvaukset, elliptiset integraalit, diplomity&ouml;,
+    conformal mapping, oskulaatioalgoritmit, MATLAB, Octave, Forge, C, C++,
+    TeX, LaTeX, esitelm&auml;t">
+    <LINK href="../mikko.css" rel="stylesheet" type="text/css">
+  </HEAD>
+  <BODY>
+
+  <a href="../">Yl&ouml;s</a>
+  <hr/>
+  <H1>Tutkimus</H1>
+  <h2>Yleist&auml;</h2>
+  T&auml;lle sivulle on koottu t&auml;rkeimm&auml;t tutkimusalaani ja
+  aiempaan p&auml;&auml;aineeseeni liittyv&auml;t tutkimusty&ouml;t
+  ja artikkelit. N&auml;it&auml; edelt&auml;&auml; k&auml;ytettyjen
+  menetelmien ja ty&ouml;kalujen selostus.
+  Tutkimukseni painottuu p&auml;&auml;asiassa numeeriseen
+  analyysiin, mutta olen k&auml;sitellyt aiemmin my&ouml;s esimerkiksi
+  fraktaaleja (Lindenmeyerin systeemit). Tutkimukset on laitettu laskevaan
+  aikaj&auml;rjestykseen, ei relevanssij&auml;rjestykseen.
+  
+  <hr/>
+  <h2>Ty&ouml;kalut ja menetelm&auml;t</h2>
+	P&auml;&auml;asiallisia ohjelmointi- ja testausty&ouml;kaluja, kieli&auml;
+	ja menetelmi&auml; numeeristen konformikuvausten ja muunkin
+	tietokonenumeriikan tutkimuksessa. T&auml;m&auml; lista annetaan
+	lukijalle taustareferenssiksi ymm&auml;rt&auml;&auml; n&auml;it&auml;
+	menetelmi&auml; ja nopeasti hakea tietoa osallistuakseen vaikka itsekin
+	jonkin t&auml;&auml;ll&auml; esitellyn tutkimuksen jatkokehitt&auml;miseen.
+	<ul>
+	  <li><a href="http://www.mathworks.com/">MATLAB</a>
+	  <p>
+	  T&auml;m&auml; katsotaan nyky&auml;&auml;n insin&ouml;&ouml;ritieteiss&auml;
+	  tutkimusty&ouml;kalujen ja ohjelmointikielten de-facto-standardiksi.
+	  MATLAB:in etuna matalamman tason ohjelmointikieliin verrattuna on
+	  helpompi ohjelmoitavuus ja testaaminen. Algoritmien suunnittelussa
+	  on hyv&auml; tapa toteuttaa ensin prototyyppi puhtaasti korkeamman
+	  tason j&auml;rjestelm&auml;ll&auml;, tarkastaa sitten menetelm&auml;n
+	  aikakompleksisuus ja vasta my&ouml;hemm&auml;ss&auml; optimoinnissa
+	  siirty&auml; 'konel&auml;heisemp&auml;&auml;n' toteutustapaan.
+	  </p>
+	  </li>
+	  <li><a href="http://www.octave.org/">GNU Octave</a>,
+	  <a href="http://octave.sourceforge.net">Octave Forge</a>:
+	  <p>
+	  T&auml;m&auml; on kenties tunnetuin ja yhteensopivin kaikista MATLAB:in
+	  ilmaisista klooneista. Sen etuna ilmaisuuden lis&auml;ksi on laajempi
+	  funktiokirjasto. Sen haittana on tulkattavuus ja sen my&ouml;t&auml;
+	  hitaus verrattuna oikeaan MATLAB:iin suurta tehoa vaativissa algoritmeissa.
+	  Osaa n&auml;ist&auml; ongelmista voi v&auml;hent&auml;&auml;
+	  kehitt&auml;m&auml;ll&auml; aikakriittiset osat uudelleen C++ -kielell&auml;
+	  toteutettuina <i>dynaamisina laajennuksina</i>. Lis&auml;ksi on havaittu,
+	  ett&auml; Octave:n dynaamisten funktioiden ja lambda-laskennan
+	  rakenteet eiv&auml;t aina toimi oikein.
+	  </p>
+	  </li>
+	  <li>C, C++:
+	  <ul>
+	    <li><a href="http://en.wikipedia.org/wiki/C_(programming_language)">
+	    Wikipedia-sivu C-ohjelmointikielest&auml;</a></li>
+	    <li><a href="http://www.cprogramming.com/tutorial/">C/C++
+	    programming tutorials</a>
+	  </ul>
+	  <p>N&auml;m&auml; ovat (tai n&auml;ist&auml; C++:n
+	  likim&auml;&auml;r&auml;inen ja vanhempi
+	  osajoukko C on,) matalan tason ohjelmointikieli,
+	  jota k&auml;ytet&auml;&auml;n aikakriittisiss&auml; ohjelmistojen osissa. N&auml;it&auml;
+	  k&auml;ytet&auml;&auml;n yleisestikin erilaisissa sovelluksissa, mutta
+	  haittapuolena on helpon dynaamisen muistinhallinnan ja roskienkeruun puuttuminen.
+	  Lis&auml;ksi listarakenteiden k&auml;sittely on monimutkaista ja vaatii
+	  ohjelmoijalta etuk&auml;teissuunnittelua siit&auml;, ovatko lineaariset
+	  vai linkitetyt listat mit&auml;kin sovellusta varten parempia.
+	  Lineaarisissa listoissa eli taulukoissa joudutaan usein tehokkuuden vuoksi
+	  etuk&auml;teen sitoutumaan tiettyyn maksimitilaresurssiin.</p>
+	  <p>Usein n&auml;it&auml; on kuitenkin vaikea tehokkaan tietokonenumeriikan
+	  lopputuotteissa korvata muilla menetelmill&auml;.</p>
+	  </li>
+	  <li>FORTRAN:
+	  <ul>
+	    <li><a href="http://fi.wikipedia.org/wiki/Fortran">
+	    Wikipedia-sivu FORTRAN-ohjelmointikielest&auml;</a></li>
+	    <li><a href="http://www.fortran.com/">The Fortran Company</a></li>
+	  </ul>
+	  <p>T&auml;m&auml; on vanhempaa polvea edustava matalan tason
+	  ohjelmointikieli, jolle p&auml;tee samantapaisia asioita kuin C:lle, eli
+	  t&auml;llainen menetelm&auml; voi olla tarpeen aikakriittisiss&auml;
+	  kohdissa.</p>
+	  </li>
+	  
+	  <li>TeX/LaTeX:
+	  <ul>
+	    <li><a href="http://fi.wikipedia.org/wiki/LaTeX">
+		Wikipedia-sivu LaTeX-tekstink&auml;sittelyj&auml;rjestelm&auml;st&auml;
+		</a></li>
+		<li><a href="http://www.ctan.org/">The Comprehensive TeX Archive Network
+		</a></li>
+	  </ul>
+	  <p>T&auml;m&auml; on k&auml;&auml;nt&auml;j&auml;pohjainen
+	  tekstink&auml;sittelyj&auml;rjestelm&auml;, jossa on hyv&auml;
+	  matemaattisten kaavojen laadinnan tuki. Matemaattiset artikkelit
+	  ja esitelm&auml;kalvot laaditaan tyypillisesti t&auml;ll&auml;.
+	  </p>
+	  </li>
+	  
+	  <li><a href="http://www.tug.org/metapost.html">METAPOST</a>:
+	  <p>T&auml;rke&auml; k&auml;&auml;nt&auml;j&auml;pohjainen
+	  kuvanpiirtoty&ouml;kalu.
+	  </p>
+	  </li>
+	  
+	  <li><a href="http://www.gnuplot.info/">Gnuplot</a>:
+	  <p>Matemaattisten kuvaajien piirto-ohjelma.</p>
+	  </li>
+	</ul>
+	
+  <hr/>
+  <h2>Tekeill&auml;</h2>
+  Tekeill&auml; on artikkeli ja ohjelmisto numeerisista
+  <a href="konformi.html">konformikuvauksista</a>,
+  jotka perustuvat oskulaatioalgoritmien ja
+  Schwarz-Christoffel-parametriongelman ep&auml;lineaarisen ratkaisemisen
+  yht&auml;aikaiseen hy&ouml;dynt&auml;miseen.
+  <hr/>
+  <h2>Esitelm&auml;t</h2>
+  Olen pit&auml;nyt seuraavat esitelm&auml;t vuoden 2007 syksyll&auml;.
+  <ul>
+  <li>Esitelm&auml; Helsingin yliopistolla analyysin seminaarissa:<br>
+  <a href="esitelma071015.pdf">Solving Schwarz-Christoffel parameter problem by osculation algorithms</a></li>
+  <li>Esitelm&auml; Turun yliopistolla analyysin
+  teemap&auml;iv&auml;ss&auml;:<br>
+  <a href="esitelma071024.pdf">On random walks inside generalized
+  quadrilaterals</a></li>
+  </ul>
+  Esitelm&auml;kalvojen kaiken sis&auml;ll&ouml;n tarkkuutta ei voida taata.
+  
+  <hr/>
+  <h2>Diplomity&ouml;: Konformikuvausten konstruoiminen yhdesti
+   yhten&auml;isilt&auml; kompleksitason alueilta kanonisille alueille.</h2>
+    <table border="3">
+    <tr>
+      <td><a href="diplomityo.pdf">pdf</a></td>
+      <td><a href="diplomityo.tar.gz">L&auml;hdekoodipaketti</a></td>
+    </tr>
+    </table>
+  <hr/>
+
+  <h2>Erikoisty&ouml;t</h2>
+  <ul>
+  <li><h3>Numeerisen laskennan menetelm&auml;t tietotekniikassa</h3>
+  Vuodelta 2006,
+  k&auml;sittelee tyypillisi&auml; alkeisfunktioiden laskentatekniikoita
+  matemaattisissa ohjelmakirjastoissa. Huomioi er&auml;it&auml; keskeisi&auml;
+  asioita algoritmien tehokkuuden ja suuren tarkkuuden laskennan
+  aihepiireist&auml;.</li>
+
+  <table border="3">
+    <tr>
+      <td><a href="numlaskenta5.pdf">pdf</a></td>
+      <td><a href="numlaskenta5.tex">LaTeX-l&auml;hdekoodi</a></td>
+    </tr>
+  </table>
+
+  <li><h3>Lindenmeyerin systeemit matemaattisessa mallinnuksessa</h3>
+  Talvelta 2004-2005,
+  k&auml;sittelee er&auml;it&auml; fraktaaleja eli toistokuvauksia, joita
+  on k&auml;ytetty esimerkiksi kasvillisuuden, orgaanisten resurssien
+  hyv&auml;ksik&auml;yt&ouml;n ja yhdyskuntasuunnittelun (metropolialueet,
+  tieverkot, rakennuskanta) tarpeisiin.</li>
+
+  <table border="3">
+    <tr>
+      <td><a href="lsysteemit-1.0.pdf">pdf</a></td>
+      <td><a href="lsysteemit-1.0.ps">ps</a></td>
+      <td><a href="lsysteemit-1.0-src.tar.gz">
+L&auml;hdekoodipaketti (tar.gz)</a></td>
+      <td><a href="lsysteemit-1.0-src.tar.bz2">
+L&auml;hdekoodipaketti (tar.bz2)</a></td>
+    </tr>
+  </table>
+
+  </ul>
+  <hr/>
+  Jos on kysytt&auml;v&auml;&auml;, minulle voi l&auml;hett&auml;&auml;
+  s&auml;hk&ouml;postia osoitteeseen:
+  <p>
+  <a href="mailto:mikko_DOT_nummelin_AT_tkk_DOT_fi">Mikko Nummelin</a>
+  &lt mikko_DOT_nummelin_AT_tkk_DOT_fi &gt
+  </p>
+  </BODY>
+</HTML>
+

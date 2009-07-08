@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <HEAD>
+    <TITLE>Mikko Nummelin - Zdisasm - a Z80 disassembler</TITLE>
+    <META name="Author" content="Mikko Nummelin">
+    <META name="keywords" content="Mikko Nummelin, homepage, Z80, disassembler, program, retro, computing">
+    <LINK href="spectrum.css" rel="stylesheet" type="text/css">
+  </HEAD>
+
+  <BODY>
+  <a href="index.en.html">Up</a>
+  <a href="zdisasm.html">In Finnish</a>
+
+  <hr/>
+
+  <h1>Zdisasm - a Z80 disassembler</h1>
+  <hr/>
+
+  <h2>Licence agreement</h2>
+<p>This is zdisasm, a simple Z80 disassembler program which
+can be used to disassemble old Sinclair ZX Spectrum and
+other Z80-based computers' machine code programs.
+You may freely share (without fee) unmodified copies of either
+it's source or binary executable, but not change it nor sell it
+without written permission from the author, Mikko Nummelin.</p>
+
+<p>The binary file JETSET.MEM is (c) Matthew Smith regarded to the
+Z80-binary it contains, but no more sold as
+a commercial product and has been public domain in practice more than a
+decade.</p>
+
+<p>There is ABSOLUTELY NO WARRANTY for this program, not for any
+possible software or hardware damages it may cause, nor for fitness for any
+particular purpose.</p>
+
+<p>
+All rights reserved except otherwise indicated on this Licence.
+<p>
+
+  <p>(c) 2002, 2005, Mikko Nummelin</p>
+
+  <hr/>
+
+<h2>Compilation/install</h2>
+<pre class="example">
+$ make
+</pre>
+<hr>
+<h2>Usage</h2>
+What is required is a plain memory dump of part of
+Z80-based computer's memory. In this package there is
+an example file named "JETSET.MEM", which is a dump of
+Sinclair ZX Spectrum 48K:s upper memory area 8000h-FFFFh
+with Matthew Smith's "Jet Set Willy" game loaded into it.<br>
+<br>
+An example session with zdisasm plus comments:<br>
+<pre class="example">
+$ zdisasm -m 8000 -if JETSET.MEM
+zdisasm: Virtual memory starts from 8000
+zdisasm: Reading from JETSET.MEM
+> 
+</pre>
+The above means that zdisasm is started with JETSET.MEM
+memory dump and zdisasm is made to think that it operates
+on a 'virtual memory' starting from address 8000h
+(good, since the original memory dump was in addresses
+8000h-FFFFh in Spectrum's memory).<br>
+<pre class="example">
+> m 8400
+zdisasm: Pointer moved to 8400
+>  
+</pre>
+This means that machine code instructions are to be listed
+from 8400h on (actual starting place in JSW).<br>
+<pre class="example">
+> l 10
+zdisasm: Listing 10 instructions ...
+8400 di               F3
+8401 ld hl,5BFF       21FF5B
+8404 ld (hl),86       3686
+8406 dec hl           2B
+8407 ld (hl),9F       369F
+8409 ld sp,5BFE       31FE5B
+840C jp 87CA          C3CA87
+840F ld a,(bc)        0A
+8410 ld b,a           47
+8411 inc b            04
+>  
+</pre>
+Lists 10 machine code instructions. If one wants to trace
+the program further, one notes the 'jp 87CA' which means
+that code execution jumps to an address 87CAh.  Therefore<br>
+<pre class="example">
+> m 87CA
+zdisasm: Pointer moved to 87CA
+> l 15
+zdisasm: Listing 15 instructions ...
+87CA xor a            AF
+87CB ld (85CE),a      32CE85
+87CE ld (85E1),a      32E185
+87D1 ld (85CD),a      32CD85
+87D4 ld (85D1),a      32D185
+87D7 ld (85CB),a      32CB85
+87DA ld (85E0),a      32E085
+87DD ld (85DF),a      32DF85
+87E0 ld a,07          3E07
+87E2 ld (85CC),a      32CC85
+87E5 ld a,D0          3ED0
+87E7 ld (85CF),a      32CF85
+87EA ld a,21          3E21
+87EC ld (8420),a      322084
+87EF ld hl,5DB4       21B45D
+> 
+</pre>
+And so on. When following subroutines, one should keep the
+return addresses in mind or track them with paper and pencil.
+When you want to exit zdisasm, just type<br>
+<pre class="example">
+> q
+zdisasm: Program finished successfully.
+</pre>
+<hr/>
+<h2>Download</h2>
+<a href="zdisasm-0.3.tar.gz">zdisasm-0.3</a>
+<hr/>
+<p>
+</body>
+</html>

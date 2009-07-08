@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+  <HEAD>
+    <TITLE>Mikko Nummelinin Perl-sivu</TITLE>
+    <META name="Author" content="Mikko Nummelin">
+    <META name="keywords" content="Mikko Nummelin, kotisivu, harrastukset, shakki, IT-ala, tietotekniikka, perl">
+    <LINK href="../mikko.css" rel="stylesheet" type="text/css">
+  </HEAD>
+
+  <BODY>
+  <a href="index.html">Yl&ouml;s</a>
+  <HR/>
+  <H1>Mikko Nummelinin Perl-sivu</H1>
+  <HR/>
+
+<TABLE>
+  <TR>
+  <TD>
+  <a href="http://www.perl.org/">
+  <IMG SRC="Perl.jpg" HEIGHT="120">
+  </a>
+  <TD>
+  &lt;- Linkki Perlin kansainv&auml;liselle sivulle.
+  </TR>
+</TABLE>
+
+<p>Perl on todenn&auml;k&ouml;isesti kaikkein tunnetuin yleisk&auml;ytt&ouml;inen
+skriptikieli. Se on alunperin kehitetty 1980-luvulla (versio 1.0 julkaistu 1987)
+C, awk ja Unix-shellien kielten (sh variantteineen) pohjalta. Perlin tavoitteen
+on ollut helppok&auml;ytt&ouml;isyys ja laajennettavuus. Jotkut pit&auml;v&auml;t
+kuitenkin haittapuolena sit&auml;, ett&auml; jotkut Perl:in ominaisuudet
+(eritt&auml;in laaja k&auml;skykanta ja pitk&auml;lle viedyt
+s&auml;&auml;nn&ouml;llisten lausekkeiden prosesointiominaisuudet) ovat tehneet
+siit&auml; (v&auml;&auml;rin "hy&ouml;tyk&auml;ytettyn&auml;") monimutkaisen.</p>
+
+<p>Esimerkkein&auml; (esimerkit ajetaan kirjoittamalla pelkk&auml; tiedostonnimi
+komentoriville, kunhan on huolehdittu, ett&auml; tiedoston ajaminen on sallittu):
+<p>"Hoi maailma"-ohjelma:
+<pre>
+#!/usr/bin/perl
+
+# Kirjoittaa tekstin 'Hoi maailma'
+print "Hoi maailma.\n"
+</pre>
+Huomaa <code>#</code>-alkuinen kommentti.</p>
+
+<p>Silmukka, joka kirjoittaa luvut yhdest&auml; kymmeneen paitsi luvun
+seitsem&auml;n:
+<pre>
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+for(my $i=1; $i<=10; $i++) {
+	print "$i\n" unless $i==7
+}
+</pre>
+Huomattava avainsana <code>my</code>, joka rajaa <i>skalaari</i>muuttujan
+<code>$i</code> vaikutuksen vain <code>for</code>-silmukkaan, samoin
+kuin <code>unless</code>-j&auml;lkiliite, jolla saadaan helposti
+poikkeustapauksia rajattua pois. Jos edell&auml;mainitussa olisi
+vahingossa k&auml;ytetty vain yksinkertaisia lainausmerkkej&auml;
+tyyliin:
+<pre>
+	print '$i\n' unless $i==7
+</pre>
+niin tuloste olisi ollut virheellinen (ohjausmerkit tulkittu kirjaimellisesti):
+<pre>
+$i\n$i\n$i\n$i\n$i\n$i\n$i\n$i\n$i\n
+</pre>
+</p>
+
+<p>Ohjelma, joka lukee standardisis&auml;&auml;ntuloon annetun tiedoston
+taulukkoon ja j&auml;rjest&auml;&auml; rivit (j&auml;rjest&auml;miskomento on
+<b>lihavoitu</b>), tulostaen lopputuloksen standardiulostuloon:
+<pre>
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+my $in;
+
+# Miinusmerkki tiedoston nimen&auml; tarkoittaa standardia sis&auml;&auml;nmenoa tai
+# ulostuloa riippuen siit&auml;, kumpaan suuntaan tiedosto avataan.
+open($in,'&lt; -');
+
+# Taulukkoon sovellettuna operaattori &lt;...&gt; tallentaa tiedoston rivit
+# taulukon alkioihin numeroj&auml;rjestyksess&auml; nollasta alkaen.
+my @ca=&lt;$in&gt;;
+<b>@ca=sort @ca;</b>
+
+# $_ on sen skalaarimuuttujan symboli, johon foreachin kohteena olevat
+# objektit selattavasta taulukosta vuoronper&auml;&auml;n joutuvat
+foreach (@ca) {
+	print $_;
+}
+</pre>
+Yll&auml;mainitussa on pieni "oikaisemisen" mahdollisuus, jos j&auml;tt&auml;isi
+standardisis&auml;&auml;nmenon avaamatta ja kirjoittaisi vain
+<pre>
+my @ca=&lt;&gt;;
+</pre>
+samalla eliminoiden muuttujan <code>$in</code>. Olkoon kuitenkin havainnollisuuden
+vuoksi n&auml;in.
+</p>
+
+<p>Parannellaan seuraavaksi ohjelmaa niin, ett&auml; se hylk&auml;&auml; sellaiset
+rivit, jotka eiv&auml;t ala kirjaimella, numerolla tai alaviivalla:
+<pre>
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+my @ca;
+
+for(my $i=0;&lt;STDIN&gt;;$i++) {
+	$ca[$i]=$_ if $_ =~ /\w.*/;
+}
+
+@ca=sort @ca;
+foreach (@ca) {
+	print $_;
+}
+</pre>
+T&auml;ss&auml; siis yleinen "ahmiminen" korvattiin
+<code>for</code>-silmukalla, jossa jokainen luettu rivi tarkastetaan sopivaa 
+<i>s&auml;&auml;nn&ouml;llist&auml; lauseketta</i> vasten. Lauseke
+<code>/\w.*/</code> siis merkitsee, ett&auml; ensin pit&auml;&auml; tulla
+"aakkosnumero" <code>\w</code> ja sitten mielivaltainen m&auml;&auml;r&auml;
+<code>*</code> mit&auml; tahansa merkki&auml; <code>.</code> . Huomattava,
+ett&auml; <code>$_</code> on my&ouml;s yleens&auml;kin <code>&lt&gt</code>:n
+kullakin kierroksella palauttama symboli. T&auml;ss&auml; vaiheessa monille
+lukijoille lienee ilmeist&auml;, miksi jotkut Perl-ohjelmat muuttuvat
+monimutkaisen n&auml;k&ouml;isiksi, kun katsoo k.o. <code>for</code>-silmukan
+rivi&auml;.
+
+</p>
+
+<p>
+Edelliset kuitenkin "harmillisesti" j&auml;rjestiv&auml;t rivit "vain"
+aakkosj&auml;rjestyksen mukaan, mutta mit&auml;, jos j&auml;rjest&auml;minen
+pit&auml;isikin tehd&auml; makuasioiden mukaan. Esimerkkein&auml; t&auml;llaisista
+tarpeista ovat mm. kauneuskilpailut ja elokuvien ja populaarimusiikin arvostelut.
+Oletetaan esimerkiksi, ett&auml; tuomariston on &auml;&auml;nestett&auml;v&auml;
+sata n&auml;kem&auml;&auml;ns&auml; ja muistamaansa elokuvaa
+paremmuusj&auml;rjestykseen kohtuullisella m&auml;&auml;r&auml;ll&auml;
+<i>kahden objektin v&auml;lisi&auml; &auml;&auml;nestyksi&auml;</i>.
+T&auml;ss&auml; olisi siis mahdollisuus muuttaa Perl:in <code>sort</code>-funktion 
+j&auml;rjestysoperaattoria kutsumaan k&auml;ytt&auml;j&auml;n antamaa
+k&auml;sky&auml;, mutta paremmaksi osoittautuu ilmeisesti kirjoittaa koko
+j&auml;rjest&auml;misrutiini uudestaan. Seuraavassa on esitetty
+"mergesort"-algoritmiin perustuva paremmuusj&auml;rjestyksen
+&auml;&auml;nestysohjelma (kommentit englanniksi, koska saatan k&auml;ytt&auml;&auml;
+t&auml;t&auml; muuallakin):
+<pre>
+#!/usr/bin/perl
+
+# A vote-mergesort algorithm. Takes an input file of strings and asks the user
+# of preference relation of items. Sometimes the algorithm prompts 'middle',
+# i.e. neither the best nor least preferred of three items to speed up
+# partitioning.
+#
+# Mikko Nummelin, 2008
+
+use strict;
+use warnings;
+
+sub vote {
+	print "Preferred of these:\n";
+	print "0: $_[0]1: $_[1]? ";
+	my $ans=&lt;STDIN&gt;;
+	return 0 if ($ans=='0');
+	return 1 if ($ans=='1');
+	return -1; # ERROR
+}
+
+sub find_pivot {
+	print "Not the best nor least preferred of these";
+	print " (just for speeding up partitioning):\n";
+	my $lastind=$#_;
+	my $midind=int($lastind/2);
+	print "0: $_[0]1: $_[$midind]2: $_[$lastind]? ";
+	my $ans=&lt;STDIN&gt;;
+	return 0 if ($ans==0);
+	return $midind if ($ans==1);
+	return $lastind if ($ans==2);
+	
+	return undef; # ERROR
+}
+
+sub sort_strings {
+	my $nstrings=@_;
+	
+	# Trivial cases
+	return undef if ($nstrings&lt;=0);
+	return $_[0] if ($nstrings==1);
+	if ($nstrings==2) {
+		if (vote($_[0],$_[1])) {
+			return ($_[1],$_[0]);
+		} else {
+			return ($_[0],$_[1]);
+		}
+	}
+	
+	my $pivot_ind = find_pivot (@_);
+	my @first;
+	my @second;
+	
+	for (my $i=0; $i&lt;$nstrings; $i++) {
+		unless($i==$pivot_ind) {
+			my $ans=vote($_[$i],$_[$pivot_ind]);
+			if ($ans) {
+				push (@second,$_[$i]);
+			} else {
+				push (@first,$_[$i]);
+			}
+		}
+	}
+	
+	@first=sort_strings(@first);
+	@second=sort_strings(@second);
+	my @retval;
+	push @retval,@first;
+	push @retval,$_[$pivot_ind];
+	push @retval,@second;
+	
+	return @retval;
+}
+
+my @strings;
+open (INFILE, "&lt;", $ARGV[0]);
+
+for (&lt;INFILE&gt;) {
+	push (@strings, $_ ) unless ($_ =~ /^\s/);
+}
+
+close INFILE;
+
+@strings=sort_strings @strings;
+
+for (@strings) {
+	print ;
+}
+</pre>
+Sit&auml; voi huvikseen kokeilla vaikkapa seuraavaa amerikkalaisten
+elokuvat&auml;htien tiedostoa vasten;
+<pre>
+Jennifer Aniston
+Evan Rachel Wood
+Brittany Snow
+Brittany Murphy
+Merryl Streep
+Britney Spears
+Tara Reid
+Mandy Moore
+Dominique Swain
+</pre>
+jolloin ohjelman alku n&auml;ytt&auml;&auml; konsolissa seuraavanlaiselta:
+<pre>
+$ perl sort_strings.pl elokuvatahdet.txt
+Not the best nor least preferred of these (just for speeding up partitioning):
+0: Jennifer Aniston
+1: Merryl Streep
+2: Dominique Swain
+? 0
+Preferred of these:
+0: Evan Rachel Wood
+1: Jennifer Aniston
+? 0
+Preferred of these:
+0: Brittany Snow
+1: Jennifer Aniston
+? 0
+Preferred of these:
+0: Brittany Murphy
+1: Jennifer Aniston
+?
+...
+</pre>
+ja loppu seuraavanlaiselta (sy&ouml;tteest&auml; riippuen):
+<pre>
+...
+Preferred of these:
+0: Merryl Streep
+1: Tara Reid
+? 1
+Evan Rachel Wood
+Brittany Snow
+Mandy Moore
+Dominique Swain
+Jennifer Aniston
+Britney Spears
+Brittany Murphy
+Tara Reid
+Merryl Streep
+</pre>
+</p>
+T&auml;ss&auml; paketissa <a href="sort_strings.tar.gz">sort_strings.tar.gz</a>
+on edellinen l&auml;hdekoodi kahden esimerkkitiedoston kera.
+</p>
+
+<HR/>
+<H2>Linkkej&auml;</H2>
+Maailmalla on paljon viisaampiakin Perl-ohjelmoijia kuin allekirjoittanut.
+T&auml;st&auml; syyst&auml; esitelt&auml;k&ouml;&ouml;n seuraavat linkit:
+<UL>
+<LI><A href="http://www.perl.org/">Perl - kansainv&auml;linen sivusto.</A>
+<LI><A href="http://fi.wikipedia.org/wiki/Perl">Perl - Wikipedia-sivu.</A>
+<LI><A href="spectrum/geoff_utils_080503.tar.gz">Geoff Eddyn laatimia
+Spectrum ja Z80-apuv&auml;lineit&auml;</A>
+</UL>
+<HR/>

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+  <HEAD>
+    <TITLE>Mikko Nummelin - Needle, a chess program</TITLE>
+    <META name="Author" content="Mikko Nummelin">
+    <META name="keywords" content="Mikko Nummelin, homepage, chess, Needle, program">
+    <LINK href="../mikko.css" rel="stylesheet" type="text/css">
+  </HEAD>
+
+  <BODY>
+  <a href="index.en.html">Up</a>
+  <a href="needle.html">In Finnish</a>
+
+  <hr/>
+
+  <h1>Needle - a chess program</h1>
+  <hr/>
+
+  <h2>Licence agreement</h2>
+<p>This is Needle, a freeware Winboard-compatible chess engine.
+You may freely share (without fee) unmodified copies of either
+it's source or binary executable, but not change it nor sell it
+without written permission from the author, Mikko Nummelin.</p>
+
+<p>There is ABSOLUTELY NO WARRANTY for this program, not for any
+possible software or hardware damages it may cause, nor for fitness for any
+particular purpose.</p>
+
+<p>
+All rights reserved except otherwise indicated on this Licence.
+<p>
+
+  <p>(c) 2004, Mikko Nummelin</p>
+
+  <hr/>
+
+  <h2>Installation instructions</h2>
+
+  NOTE: Leave the expression <code>asm=1</code> out if it appears that
+the program is not otherwise compiling properly.
+
+  <h3>Unix-compatible OS:es (Linux, BSD, OpenSolaris etc.)</h3>
+
+  Extract the source package with <code>tar</code> and <code>gunzip</code>
+  and then run
+
+  <pre>
+  $ make clean; make asm=1
+
+  $ cp needle needle.bk &lt;hakemisto, jossa ajat XBoardia Needlen kanssa&gt;
+  </pre>
+
+  In order to deploy in Unix-compatible systems with XBoard:
+
+  <pre>
+  $ xboard -fcp needle -size Small -tc 5 -inc 10 &
+  </pre>
+
+  Size, time control and increment are just examples,
+  Needle accepts all time control types.
+
+  <h3>Micro$oft Windows</h3>
+
+  In order to compile the source package in Micro$oft Windows-systems
+  by MSYS/MinGW or Cygwin:
+
+  <pre>
+  $ make clean; make mswindows=1 asm=1
+
+  $ cp needle&lt;version&gt;.exe needle.bk &lt;Your WinBoard directory&gt;
+  </pre>
+
+  In order to deploy in Micro$oft Windows systems with WinBoard:
+
+  <p>
+  Edit 'winboard.ini' and add 'needle&lt;version&gt;.exe' into sections
+  <CODE>/firstChessProgramNames</CODE> and <CODE>/secondChessProgramNames</CODE>.
+  This also applies to the binary package.
+  </p>
+
+  <hr/>
+
+  <H3>Program files (only newest version as older versions are much more buggy)</H3>
+  <ul>
+  <li><a href="needle-0.53.1.zip">Windows-binary</a></li>
+  <li><a href="needle-0.53.1-src.tar.gz">Source package</a></li>
+  </ul>
+
+  <hr/>
+  <h3>Acknowledgements</h3>
+  Thanks to Frans Ekman (author of Hoplite) for testing many alpha-test
+versions of this program for weeding fatal bugs, to Robert Hyatt
+(author of Crafty), Tom Kerrigan (author of TSCP) and Oliver Brausch
+(author of OliThink) whose open-source programs have given me many
+important ideas and also to all authors of various web-resources
+for chess programming.
+  <hr/>
+  <p/>
+
+</BODY>
+</HTML>

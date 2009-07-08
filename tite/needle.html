@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+  <HEAD>
+    <TITLE>Mikko Nummelin - Needle, shakkiohjelma</TITLE>
+    <META name="Author" content="Mikko Nummelin">
+    <META name="keywords" content="Mikko Nummelin, kotisivu, shakki, Needle, shakkiohjelma">
+    <LINK href="../mikko.css" rel="stylesheet" type="text/css">
+  </HEAD>
+
+  <BODY>
+  <a href="index.html">Yl&ouml;s</a>
+  <a href="needle.en.html">Englanniksi</a>
+
+  <hr/>
+
+  <h1>Needle - shakkiohjelma</h1>
+  <hr/>
+
+  <h2>Lisenssi</h2>
+  <p>Needle on ilmaisjakelussa oleva Winboard-yhteensopiva shakkiohjelma.
+  Voit vapaasti jakaa sen muuttamatonta l&auml;hdekoodipakettia tai
+  binaareja, kuitenkaan ilman oikeutta peri&auml; niist&auml; maksua.
+  Laajemmat oikeudet, kuten ohjelman peluuttaminen turnauksissa,
+  vaativat allekirjoittaneen (Mikko Nummelin) kirjallisen
+  luvan tehd&auml; niin.</p>
+
+  <p>Ohjelman toimivuudesta EI OLE MIT&Auml;&Auml;N TAKUUTA, ei edes
+  mahdollisista ohjelmistojen tai laitteistojen vahingoista, mit&auml;
+  sen k&auml;ytt&ouml; saattaisi aiheuttaa, eik&auml; sopivuudesta mihink&auml;&auml;n
+  erityiseen tarkoitukseen.</p>
+
+  <p>Kaikki t&auml;ss&auml; lisenssiss&auml; mainitsemattomat oikeudet
+  pid&auml;tet&auml;&auml;n.</p>
+
+  <p>(c) 2004, Mikko Nummelin</p>
+
+  <hr/>
+
+  <h2>Asennusohjeet</h2>
+
+  HUOMAUTUS: J&auml;t&auml; seuraavista ilmaisu <code>asm=1</code> pois, jos osoittautuu,
+  ettei k&auml;&auml;nn&ouml;s muuten toimi.
+
+  <h3>Unix-yhteensopivat j&auml;rjestelm&auml;t (Linux, BSD, OpenSolaris jne.)</h3>
+
+  Pura l&auml;hdekoodipaketti ja suorita l&auml;hdekoodihakemistossa:
+
+  <pre>
+  $ make clean; make asm=1
+
+  $ cp needle needle.bk &lt;hakemisto, jossa ajat XBoardia Needlen kanssa&gt;
+  </pre>
+
+  Ajaaksesi Unix-yhteensopivissa j&auml;rkestelmiss&auml; XBoard:in kanssa:
+
+  <pre>
+  $ xboard -fcp needle -size Small -tc 5 -inc 10 &
+  </pre>
+
+  Koko, aikakontrolli ja lis&auml;ys ovat vain esimerkkej&auml;, Needle hyv&auml;ksyy
+  kaikki XBoard:in aikakontrollitavat.
+
+  <h3>Micro$oft Windows</h3>
+
+  Ajaaksesi Micro$oft Windows-j&auml;rjestelmiss&auml; MSYS/MinGW:ll&auml tai Cygwinill&auml;:
+
+  <pre>
+  $ make clean; make mswindows=1 asm=1
+
+  $ cp needle&lt;version&gt;.exe needle.bk &lt;WinBoard-hakemistosi&gt;
+  </pre>
+
+  Ajaaksesi Micro$oft Windows-j&auml;rjestelmiss&auml; WinBoard:in kanssa:
+
+  <p>
+  Editoi 'winboard.ini':&auml; ja lis&auml;&auml; 'needle&lt;version&gt;.exe' osioihin
+  <CODE>/firstChessProgramNames</CODE> ja <CODE>/secondChessProgramNames</CODE>.
+  </p>
+
+  <hr/>
+
+  <H3>Ohjelmatiedostot (vain uusin versio)</H3>
+  <ul>
+  <li><a href="needle-0.53.1.zip">Windows-binaari</a></li>
+  <li><a href="needle-0.53.1-src.tar.gz">L&auml;hdekoodipaketti</a></li>
+  </ul>
+
+  <hr/>
+  <h3>Kiitokset</h3>
+  Kiitokset Frans Ekmanille (Hopliten kirjoittaja) ohjelman
+  k&auml;ytt&ouml;&ouml;nottotestauksesta ja useiden pahojenkin ohjelmointivirheiden
+  havaitsemisesta, Robert Hyattille (Craftyn kirjoittaja), Tom Kerriganille
+  (TSCP:n kirjoittaja) ja Oliver Brauschille (OliThinkin kirjoittaja), joiden
+  avoimen l&auml;hdekoodin shakkiohjelmat ovat antaneet minulle useita t&auml;rkeit&auml;
+  ideoita.
+
+  <hr/>
+  <p/>
+
+</BODY>
+</HTML>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+  <HEAD>
+    <TITLE>Mikko Nummelin - Musiikki</TITLE>
+    <META name="Author" content="Mikko Nummelin">
+    <META name="keywords" content="Mikko Nummelin, kotisivu, musiikki, midi">
+    <LINK href="../mikko.css" rel="stylesheet" type="text/css">
+  </HEAD>
+  <BODY>
+<a href="../index.html">Yl&ouml;s</a>
+    <HR/>
+    <H1>Musiikki</H1>
+    <HR/>
+      <H2>Yleist&auml;</H2>
+<p>T&auml;ll&auml; sivulla on yleistietoa musiikkiharrastuksista, t&auml;ll&auml;
+hetkell&auml; l&auml;hinn&auml; MIDI-musiikin laatimisesta
+Linux-k&auml;ytt&ouml;j&auml;rjestelm&auml;ss&auml;.</p>
+	<H2>Esivalmistelut</H2>
+      <H3>K&auml;ytt&ouml;j&auml;rjestelm&auml;ytimen konfigurointi</H3>
+<p><b>V&auml;&auml;r&auml;nlaisella tai v&auml;&auml;rin sovelletulla
+Linux-ytimell&auml; ei voi tehd&auml; musiikkia!</b>
+N&auml;in kategorisesti on asia ilmaistava aloittelevalle
+Linux-musiikintekij&auml;lle, jotta v&auml;ltytt&auml;isiin lukuisilta
+kesken&auml;&auml;n ep&auml;sopivien pakettien ja
+&auml;&auml;nij&auml;rjestelm&auml;n katkosten provosoimilta perisuomalaisilta
+voimasanoilta. Jotta emme joutuisi menem&auml;&auml;n t&auml;ss&auml;
+Linux-j&auml;rjestelm&auml;n k&auml;&auml;nt&auml;miseen l&auml;hdekoodeista
+asti, suositeltakoon heti toimitettavaksi <b>t&auml;ysaikaisen Linux-ytimen
+asentaminen</b> automaattisesti. Uusimmassa Ubuntu Linux:issa se tapahtuu
+seuraavasti:</p>
+<pre>
+$ sudo apt-get install linux-rt
+</pre>
+<p>T&auml;m&auml;n seurauksena seuraavan kerran tietokonetta
+k&auml;ynnistett&auml;ess&auml; on tarjolla <b>*-rt</b> vaihtoehdolla oleva
+k&auml;ynnist&auml;minen. Kun t&auml;m&auml; vaihtoehto valitaan,
+p&auml;&auml;st&auml;&auml;n j&auml;rjestelm&auml;&auml;n, jossa joillakin
+k&auml;ytt&auml;jill&auml; voi olla <b>t&auml;ysaikaisen
+suorittimenk&auml;yt&ouml;n oikeus</b>. T&auml;llaisen oikeuden voi 
+p&auml;&auml;k&auml;ytt&auml;j&auml; my&ouml;nt&auml;&auml;
+<b>audio</b>-ryhm&auml;&auml;n  kuuluville k&auml;ytt&auml;jille seuraavasti:</p>
+<pre>
+$ cd /etc/security
+$ sudo vim limits.conf
+</pre>
+<p>ja editoimalla mainittu tiedosto sis&auml;lt&auml;m&auml;&auml;n seuraavat
+rivit:</p>
+<pre>
+@audio  -       rtprio  99
+@audio  -       memlock unlimited
+@audio  -       nice    -19
+</pre>
+<p>Nyt on kyseisen k&auml;ytt&auml;j&auml;n kirjauduttava kerran ulos ja kerran
+sis&auml;&auml;n.</p>
+        <H3>Ohjelmallinen syntetisaattori</H3>
+<p>Linuxin toiseksi suosituin ja itse k&auml;ytt&auml;m&auml;ni ohjelmallinen
+syntetisaattori (Timidity:n j&auml;lkeen) on Fluidsynth.
+T&auml;m&auml; asennetaan Ubuntu Linux-j&auml;rjestelm&auml;ss&auml; seuraavasti:
+<pre>
+$ sudo apt-get install fluidsynth fluid-soundfont-gm fluid-soundfont-gs
+</pre>
+T&auml;ll&auml; varmistetaan my&ouml;s sopivien
+&auml;&auml;niesimerkkitiedostojen (engl. sounfonts) asentuminen oikein.</p>
+        <H3>JACK - &auml;&auml;nivirtojen yhdist&auml;mis- ja
+kytkent&auml;ty&ouml;kalu</H3>
+<p>T&auml;m&auml; on my&ouml;s v&auml;ltt&auml;m&auml;t&ouml;n. Se asennetaan
+esimerkiksi komennolla:
+<pre>
+$ sudo apt-get install qjackctl
+</pre>
+	<H3>Rosegarden - MIDI-sekvensseri</H3>
+T&auml;m&auml; on varsinainen musiikinteko-ohjelma ja se asennetaan komennolla:
+<pre>
+$ sudo apt-get install rosegarden
+</pre></p>
+<hr/>
+	<H2>Ohjelmien k&auml;ynnist&auml;minen</H2>
+<p>Ensimm&auml;isen&auml; tulee konfiguroida ja k&auml;ynnist&auml;&auml; JACK.
+T&auml;m&auml; tapahtuu helpoiten etsim&auml;ll&auml; k&auml;ynnistysvalikon
+multimediaosasta "Jack Control"-ikoni ja k&auml;ynnist&auml;m&auml;ll&auml;
+<code>qjackctl</code> siit&auml;. Alla olevista kuvista n&auml;kyy muutama
+esimerkki-ikkuna. Merkillepantavaa on ruksi kohdassa "Realtime" ja se, ett&auml;
+sovelman ollessa k&auml;ynniss&auml; (Start) teksti "RT" vilkkuu. <i>Huomaa,
+ett&auml; t&auml;ysaikaisuuden valitsematta j&auml;tt&auml;minen tai
+v&auml;&auml;r&auml;nlaisen, t&auml;t&auml; mahdollistamattoman ytimen
+k&auml;ytt&ouml; johtaa &auml;&auml;nitysten ja soiton ep&auml;onnistumisiin
+&auml;&auml;nikatkojen vuoksi!</i></p>
+<img src="qjackctl_config.png" width="50%" align="center"/>
+<img src="qjackctl_main.png" align="center"/>
+<p>Seuraavaksi avataan konsoli-ikkuna ja k&auml;ynnistet&auml;&auml;n Fluidsynth siit&auml;:
+<pre>
+$ fluidsynth -a jack -r 44100 /usr/share/sounds/sf2/FluidR3_GM.sf2
+</pre>
+T&auml;ss&auml; kohden on oltava huolellinen, ett&auml; <code>-r</code>-optiolla
+valittu taajuus vastaa t&auml;sm&auml;lleen JACK:in taajuutta.
+V&auml;&auml;r&auml; taajuus voi johtaa MIDI-sekvenssereiss&auml; tai niiden apuna
+olevissa &auml;&auml;nitysohjelmissa musiikin soimiseen v&auml;&auml;r&auml;lt&auml;
+korkeudelta tai MIDI-raitojen ja audioraitojen keskin&auml;iseen
+ep&auml;tahtiin (mik&auml; kuulostaa todella rumalta). T&auml;m&auml;n j&auml;lkeen
+kytket&auml;&auml;n Fluidsynth systeemin ulostuloon seuraavasti:</p>
+<img src="qjackctl_conn1.png" align="center"/>
+<p>Lopuksi k&auml;ynnistet&auml;&auml;n <code>rosegarden</code> multimedia-valikosta.
+Sen k&auml;ynnist&auml;misen j&auml;lkeen pit&auml;isi JACK:in yhdistelyv&auml;lilehden
+n&auml;ytt&auml;&auml; seuraavanlaiselta:</p>
+<img src="qjackctl_conn2.png" align="center"/>
+<p>eli Rosegarden:in kytkenn&auml;t on automaattisesti huomioitu.</p>
+<hr/>
+<H2>Linkkej&auml;</H2>
+<ul>
+<li><a href="http://jackaudio.org/">JACK - audio connection kit</a>
+<li><a href="http://www.rosegardenmusic.com/">Rosegarden - music software for Linux</a>
+<li><a href="http://wiki.ubuntu-fi.org/Ubuntu_Studio/">Ubuntu studio (suomenkielinen)</a>
+</ul>
+<hr/>
+  </BODY>
+</HTML>

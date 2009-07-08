@@ -1,0 +1,1003 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+<HEAD>
+	
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.3  (Linux)">
+	<META NAME="CREATED" CONTENT="20060414;13553300">
+	<META NAME="CHANGED" CONTENT="20060414;15300700">
+	
+	<STYLE>
+		<!-- 
+		BODY,DIV,TABLE,THEAD,TBODY,TFOOT,TR,TH,TD,P { font-family:"Nimbus Sans L"; font-size:x-small }
+		 -->
+	</STYLE>
+	
+</HEAD>
+
+<BODY TEXT="#000000">
+<HR>
+	<P><CENTER>
+		<H1>Tiivistelm&auml;</H1>
+		<A HREF="#table0">Z80 instruction set</A><BR>
+		<A HREF="#table1">Prefixes</A><BR>
+		
+	</CENTER></P>
+<HR>
+<A NAME="table0"><H1>Taulukko 1: <EM>Z80 instruction set</EM></H1></A>
+<TABLE FRAME=VOID CELLSPACING=0 COLS=9 RULES=NONE BORDER=0>
+	<COLGROUP><COL WIDTH=32><COL WIDTH=57><COL WIDTH=66><COL WIDTH=69><COL WIDTH=70><COL WIDTH=73><COL WIDTH=51><COL WIDTH=60><COL WIDTH=34></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD WIDTH=32 HEIGHT=31 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=4>Z80 instruction set</FONT></TD>
+			<TD WIDTH=57 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=66 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=69 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=70 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=73 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=51 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=60 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=34 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=24 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=28 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=4>Ordinary instructions:</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>0</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>1</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>2</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>3</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>4</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>5</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>6</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>7</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>00</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld bc, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld (bc),a</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inc bc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inc b</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>dec b</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld b, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rlca</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>08</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ex af, af'</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>add hl, bc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld a,(bc)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>dec bc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inc c</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>dec c</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld c, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rrca</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>10</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>djnz N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld de, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld (de),a</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inc de</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inc d</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>dec d</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld d, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rla</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>18</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jr N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>add hl, de</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld a,(de)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>dec de</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inc e</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>dec e</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld e, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rra</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>20</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jr nz, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld hl, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld (NN),hl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inc hl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inc h</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>dec h</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld h,N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>daa</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>28</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jr z, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>add hl, hl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld hl, (NN)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>dec hl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inc l</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>dec l</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld l, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>cpl</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>30</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jr nc, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld sp, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld (NN), a</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inc sp</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inc (hl)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>dec (hl)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld (hl), N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>scf</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>38</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jr c, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>add hl, sp</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld a, (NN)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>dec sp</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inc a</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>dec a</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld a, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ccf</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>40-7f:</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>p=b[3-5]</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>q=b[0-2]</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld Rp,Rq</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDNUM="1035;0;[TT]:MM:SS"><FONT FACE="Bitstream Vera Serif" SIZE=1>76:</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>halt</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>R:</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="0" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>0</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>b</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="1" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>1</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>c</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="2" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>2</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>d</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="3" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>3</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>e</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="4" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>4</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>h</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="5" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>5</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>l</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="6" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>6</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>(hl)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="7" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>7</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>a</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>80-bf:</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>p=b[3-5]</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>q=b[0-2]</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>CMDp a,Rq</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>CMD:</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="0" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>0</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>add</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="1" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>1</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>adc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="2" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>2</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>sub</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="3" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>3</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>sbc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="4" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>4</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>and</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="5" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>5</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>xor</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="6" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>6</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>or</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="7" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>7</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>cp</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="0" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>0</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="1" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>1</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="2" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>2</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="3" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>3</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="4" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>4</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="5" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>5</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="6" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>6</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="7" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>7</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>c0</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ret nz</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>pop bc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jp nz, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jp NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>call nz, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>push bc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>add a, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rst 0</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>c8</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ret z</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ret</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jp z, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>CB</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>call z, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>call NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>adc a, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rst 8</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>d0</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ret nc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>pop de</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jp nc, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>out (N), a</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>call nc, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>push de</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>sub a, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rst 10</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>d8</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ret c</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>exx</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jp c, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>in a, (N)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>call c, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>DD-&gt;ix</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>sbc a, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rst 18</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>e0</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ret po</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>pop hl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jp po, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ex (sp), hl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>call po, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>push hl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>and a, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rst 20</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>e8</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ret pe</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jp (hl)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jp pe, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ex de, hl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>call pe, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ED</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>xor a, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rst 28</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>f0</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ret p</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>pop af</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jp p, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>di</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>call p, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>push af</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>or a, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rst 30</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>f8</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ret m</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld sp, hl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>jp m, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ei</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>call m, NN</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>FD-&gt;iy</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>cp a, N</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rst 38</FONT></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<!-- ************************************************************************** -->
+<HR>
+<A NAME="table1"><H1>Taulukko 2: <EM>Prefixes</EM></H1></A>
+<TABLE FRAME=VOID CELLSPACING=0 COLS=9 RULES=NONE BORDER=0>
+	<COLGROUP><COL WIDTH=38><COL WIDTH=61><COL WIDTH=80><COL WIDTH=65><COL WIDTH=70><COL WIDTH=47><COL WIDTH=47><COL WIDTH=62><COL WIDTH=47></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD WIDTH=38 HEIGHT=28 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=4>CB-prefixed instructions:</FONT></TD>
+			<TD WIDTH=61 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=80 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=65 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=70 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=47 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=47 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=62 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD WIDTH=47 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>00-3f:</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>p=b[3-5]</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>q=b[0-2]</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>CMDp Rq</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>CMD:</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="0" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>0</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rlc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="1" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>1</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rrc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="2" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>2</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="3" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>3</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rr</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="4" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>4</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>sla</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="5" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>5</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>sra</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="6" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>6</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>sll (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="7" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>7</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>srl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>40-7f:</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>p=b[3-5]</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>q=b[0-2]</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>bit Np, Rq</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>80-bf:</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>p=b[3-5]</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>q=b[0-2]</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>res Np, Rq</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>c0-ff:</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>p=b[3-5]</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>q=b[0-2]</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>set Np, Rq</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=28 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=4>ED-prefixed instructions:</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=3><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>00-3f:</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="0" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>0</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="1" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>1</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="2" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>2</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="3" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>3</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="4" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>4</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="5" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>5</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="6" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>6</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="7" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>7</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT SDVAL="40" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>40</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>in b, (bc)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>out (bc), b</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>sbc hl, bc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld (NN), bc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>neg</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>retn</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>im 0</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld i, a</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT SDVAL="48" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>48</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>in c, (bc)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>out (bc), c</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>adc hl, bc</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld bc, (NN)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>reti</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>im 0/1 (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld r, a</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT SDVAL="50" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>50</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>in d, (bc)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>out (bc), d</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>sbc hl, de</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld (NN), de</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>im 1</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld a, i</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT SDVAL="58" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>58</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>in e, (bc)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>out (bc), e</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>adc hl, de</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld de, (NN)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>im 2</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld a, r</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT SDVAL="60" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>60</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>in h, (bc)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>out (bc), h</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>sbc hl, hl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld (NN), hl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rrd a</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT SDVAL="68" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>68</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>in l, (bc)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>out (bc), l</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>adc hl, hl</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld hl, (NN)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>rld a</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT SDVAL="70" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>70</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>in f, (bc)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>out (bc), f (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>sbc hl, sp</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld (NN), sp</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT SDVAL="78" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>78</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>in a, (bc)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>out (bc), a</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>adc hl, sp</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ld sp, (NN)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT SDVAL="0" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>0</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="1" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>1</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="2" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>2</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="3" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>3</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="4" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>4</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="5" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>5</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="6" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>6</FONT></TD>
+			<TD ALIGN=LEFT SDVAL="7" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>7</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT SDVAL="80" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>80</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT SDVAL="88" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>88</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT SDVAL="90" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>90</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT SDVAL="98" SDNUM="1035;"><FONT FACE="Bitstream Vera Serif" SIZE=1>98</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>a0</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ldi</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>cpi</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ini</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>outi</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>a8</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ldd</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>cpd</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ind</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>outd</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>b0</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>ldir</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>cpir</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>inir</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>otir</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>b8</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>lddr</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>cpdr</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>indr</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>otdr</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=19 ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>c0-ff:</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1>nop (*)</FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT FACE="Bitstream Vera Serif" SIZE=1><BR></FONT></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<!-- ************************************************************************** -->
+</BODY>
+
+</HTML>

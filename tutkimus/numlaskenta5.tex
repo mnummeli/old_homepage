@@ -1,0 +1,1154 @@
+\documentclass[a4paper]{report}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[finnish]{babel}
+\usepackage{amssymb}
+%\usepackage{showkeys} % Debuggausoptio
+\usepackage{makeidx}
+\usepackage{verbatim}
+\usepackage[dvips]{graphicx}
+\newtheorem{lause}{Lause}
+\newtheorem{maaritelma}{Määritelmä}
+\newtheorem{esimerkki}{Esimerkki}
+\newtheorem{todistus}{Todistus}
+\title{Mat-1.125, Matematiikan erikoistyö:
+Numeerisen laskennan menetelmät tietotekniikassa}
+\author{Mikko Nummelin, 44065E}
+\date{arkistoversio, to 12.10.2006}
+\begin{document}
+\maketitle
+\tableofcontents
+
+% Johdanto
+\chapter{Johdanto}
+
+Nykyaikainen tietotekniikan kehitys asettaa merkittäviä vaatimuksia monimutkaisten matemaattisten laskutoimitusten nopeuksille. Esimerkkeinä voi mainita varsinaisten laskentaohjelmien (Matlab \cite{matlab}, Maple \cite{maple}, Yacas \cite{yacas} jne.) lisäksi myös korkealaatuisella ja nopealla grafiikalla varustetut tietokonepelit, samoin kuin sääennusteet, isot lujuuslaskelmat tai tarkat simulaatiot. Tämä vaatii käytännössä sitä, että laskennan eri osa-alueet on toteutettu mahdollisimman tehokkaasti:
+
+\begin{itemize}
+\item
+Itse ohjelma ja ohjelman syöte on hyvin suunniteltu ja mahdollisimman virheetön.
+\item
+Käyttöjärjestelmässä olevat matemaattiset kirjastot on toteutettu hyvin.
+\item
+Muistia ja mikroprosessorin tehoa on riittävästi.
+\end{itemize}
+
+Tämä erikoistyö käsittelee kahta jälkimmäistä osa-aluetta ja ottaa tutkittavaksi erikseen alkeislaskutoimitusten ja alkeisfunktioiden tehokkaat toteutukset. Monissa tapauksissa on syytä käyttää eri algoritmeja pienen ja suuren tarkkuuden laskutoimituksille. Kaikkein alkeellisimmat laskutoimitukset on toteutettu käytännössä prosessorin elektroniikan tai mikrokoodin tasolla kun taas suuren tarkkuuden laskutoimitukset on useimmiten ohjelmoitu korkeamman tason ohjelmointikielillä kuten C/C++:lla \cite{c}, \cite{gcc} tai Fortranilla \cite{fortran}.
+
+% Käsitteitä
+\chapter{Käsitteitä ja perusteita}
+Tässä luvussa käsitellään lyhyesti loogiset operaatiot yhteen- ja vähennyslaskujen suorittamisen apuna, suuren tarkkuuden kokonaislukujen yhteen- ja vähennyslaskun ''apuvälineet'' \texttt{AMD64}-prosessoriperheessä \cite{amd}, liukulukujen ANSI/IEEE-standardi \cite{ieee754} sekä polynomien evaluointi Hornerin säännöllä.
+
+\section{Yhteen- ja vähennyslaskut}
+\begin{lause}[Binaarilukujen yhteenlasku]
+Olkoot $x$ ja $y$ binaarilukuja seuraavasti:
+\begin{equation}
+x = \sum_{k=0}^{n-1}x_k 2^k,\quad
+y = \sum_{k=0}^{n-1}y_k 2^k
+\end{equation}
+missä $\forall k,\ x_k,y_k\in\{0,1\}$.
+Tällöin voidaan näiden summa $z=x+y=\sum_{k=0}^{n}z_k 2^k$ lausua seuraavasti:
+\begin{eqnarray}
+m_0 & = & 0 \nonumber\\
+m_{k+1} & = & (x_k \land y_k) \lor (x_k \land m_k) \lor (y_k \land m_k) \nonumber\\
+z_k & = & x_k \not\leftrightarrow y_k \not\leftrightarrow m_k
+\label{looginensumma}
+\end{eqnarray}
+Kaavassa (\ref{looginensumma}) esiintyvät loogiset operaatiot on kuvailtu taulukossa
+\ref{loogisetoperaatiot}.
+On myös huomattava ns. \emph{muistinumeron} $m_k$ käyttö, koska kaikki bitit $z_k\in\{0,1\}$.
+\label{yhteenlaskulause}
+\end{lause}
+\begin{lause}[Binaarilukujen vähennyslasku]
+Olkoon $x$ ja $y$ kuten lauseessa \ref{yhteenlaskulause}
+Tällöin voidaan näiden erotus $z$ (kuten edellä) lausua seuraavasti:
+\begin{eqnarray}
+m_0 & = & 0 \nonumber\\
+m_{k+1} & = & (\lnot x_k \land y_k) \lor (\lnot x_k \land m_k) \lor (y_k \land m_k) \nonumber\\
+z_k & = & x_k \not\leftrightarrow y_k \not\leftrightarrow m_k
+\end{eqnarray}
+Tässä muistinumeroa vastaa \emph{lainaus} $m_k$.
+\label{vahennyslaskulause}
+\end{lause}
+Nämä lauseet voidaan yleistää koskemaan suuremmissa kannoissa esitettyjä lukuja. Esimerkiksi, jos halutaan laskea kahden $q$-kantaisen luvun yhteenlasku, missä siis
+\begin{equation}
+x = \sum_{k=0}^{n-1}x_k q^k,\quad
+y = \sum_{k=0}^{n-1}y_k q^k
+\end{equation}
+ja $z=x+y$, menetellään seuraavasti:
+
+Asetetaan $m_0=0$ ja lasketaan $k=0$ alkaen $z_k^*=x_k+y_k+m_k$.
+Jos nyt jollakin askeleella osoittautuu, että $z_k^*\ge q$, on asetettava
+$z_k=z_k^*-q$ ja $m_{k+1}=1$, muussa tapauksessa $z_k=z_k^*$ ja $m_{k+1}=0$.
+Ideana on siis se, että kun kerrointa $z_k$ lasketaan, huomioidaan rajoite
+$\forall k,\ z_k\in[0,q-1]$ ja siis \emph{siirretään} ylijäämäbitti seuraavaan
+yhteenlaskuun.
+
+\begin{table}
+\caption{Loogisten operaatioiden merkitys}
+$$
+\begin{array}{|c|c|c|c|c|c|}
+\hline
+x & y & \lnot x & x \land y & x \lor y & x \not\leftrightarrow y \\
+\hline
+0 & 0 & 1 & 0 & 0 & 0 \\
+\hline
+1 & 0 & 0 & 0 & 1 & 1 \\
+\hline
+0 & 1 & 1 & 0 & 1 & 1 \\
+\hline
+1 & 1 & 0 & 1 & 1 & 0 \\
+\hline
+\end{array}
+$$
+\label{loogisetoperaatiot}
+\end{table}
+
+Mikroprosessoreissa tätä on helpotettu käyttämällä hyväksi \emph{muistinumerolippua} (engl. carry flag) ja erityistä summauskäskyä, joka huomioi automaattisesti muistinumerolipun arvon $\in\{0,1\}$
+lisäämisen tulokseen. \texttt{AMD64}-arkkitehtuurissa \cite{amd} tätä varten on käsky \texttt{adc} ja vähennyslaskun lainausta varten (tarkempi käsittely sivuutetaan), käsky \texttt{sbb}.
+\begin{esimerkki}[\texttt{AMD64}-arkkitehtuurin muistinumerolippu]
+Seuraava konekieliohjelma suorittaa kahden mielivaltaisen tarkkuuden luvun summauksen käyttäen hyväksi muistinumerolippua:
+\begin{verbatim}
+/* Kahden mielivaltaisen pituisen kokonaisluvun summa
+ * muistinumerolippua hyväksikäyttäen. Kutsutapa on
+ *
+ * sum_xl(n,r,a1,a2)
+ * u64 n,*r,*a1,*a2;
+ *
+ * r osoittaa lopputulokseen, a1 ja a2 summattaviin,
+ * n on e.m:ssa olevien 64-bittisten sanojen lukumäärä.
+ */
+
+.globl sum_xl
+        .type   sum_xl, @function
+sum_xl:
+        testq   %rdi, %rdi      /* Onko n==0? */
+        je      end             /* Jos on, niin ulos */
+        xorq    %r8, %r8        /* i=0; */
+        clc                     /* muistinumerolippu alas */
+loop:
+        movq    (%rcx,%r8,8), %rax
+        adcq    (%rdx,%r8,8), %rax
+        movq    %rax, (%rsi,%r8,8)      /* r[i]=a1[i]+'a2[i] */
+        incq    %r8                     /* i++; */
+        decq    %rdi                    /* n--; */
+        jne     loop                    /* if(n==0) goto loop */
+end:
+        ret                     /* ulos */
+\end{verbatim}
+Kannattaa huomata erityisesti sudenkuoppa käskyn \texttt{decq \%rdi} kohdalla, jossa on helppo tehdä ohjelmointivirhe. Jos kirjoittaisi hätäisesti sen tilalle esim: \texttt{cmpq \%r8, \%rdi}, idealla, että verrataan C-tyylisesti
+\begin{verbatim}
+if(i!=n) goto loop;
+\end{verbatim}
+mennään metsään, koska \texttt{cmpq} tärvelee muistinumerolipun arvokkaan sisällön. Siksi on tyydyttävä käyttämään parametria \texttt{n} ''toisena laskurina'', jonka pudotessa nollaan nollalippu nousee, mutta muistinumerolippu pysyy koko ajan siinä asennossa, mihin se oli käskyn \texttt{adcq (\%rdx,\%r8,8), \%rax} jälkeen asettunut. Seuraavalla kierroksella sama \texttt{adcq}-käsky lisää sitten ylimääräisen $1$:en, jos muistinumerolippu oli ylhäällä.
+
+Tätä konekieliohjelmaa voi testata vaikkapa C-ohjelmalla
+\begin{verbatim}
+#include <stdio.h>
+
+#define NUM_SIZE        0x40
+
+typedef unsigned long long      u64;
+
+void sum_xl(u64,u64 *,u64 *,u64 *);
+
+main() {
+        int i;
+        u64 r[NUM_SIZE],a1[NUM_SIZE],a2[NUM_SIZE];
+        for(i=1;i<NUM_SIZE-1;i++) {
+                a1[i]=0xffffffffffffffff;
+                a2[i]=0x0000000000000000;
+        }
+        a1[0]=0xfffffffffffffff8;
+        a2[0]=0x000000000000000a;
+        a1[NUM_SIZE-1]=0x0000000000000000;
+        a2[NUM_SIZE-1]=0x0000000000000000;
+        printf("a1:\n");
+        for(i=0;i<NUM_SIZE;i++) {
+                printf("%3d: %16llx\n",i,a1[i]);
+        }
+        printf("a2:\n");
+        for(i=0;i<NUM_SIZE;i++) {
+                printf("%3d: %16llx\n",i,a2[i]);
+        }
+        sum_xl(NUM_SIZE,r,a1,a2);
+        printf("r:\n");
+        for(i=0;i<NUM_SIZE;i++) {
+                printf("%3d: %16llx\n",i,r[i]);
+        }
+}
+\end{verbatim}
+\end{esimerkki}
+
+\section{Liukuluvut}
+Liukuluvut ovat lukuja tyyppiä $\pm x\ q^m$, missä $x$ on mantissa, $q$ kantaluku ja $m$ eksponentti. Erityisiä merkintätapoja näille on $xEm$, mikäli $q=10$ ja $x@m$, mikäli $q=2$.
+Useat saman kannan liukuluvut ovat keskenään samansuuruisia, esim: $12E3=1.2E4=12000$. Tästä syystä on käytössä erilaisia määritelmiä sille, milloin liukuluku on \emph{normalisoidussa} muodossa, esimerkiksi liukulukujen ANSI/IEEE-standardin \cite{ieee754} mukaan binaarisen liukuluvun mantissa voi olla väliltä $[1,2)$. Sama standardi määrittelee tietokoneiden prosessoreissa käytettävät liukuluvut joko \emph{yksinkertaisen tarkkuuden} liukuluvuiksi, jolloin normalisoitua mantissaa varten varataan 23 bittiä, suunnattua eksponenttia varten 8 bittiä ja merkkiä varten 1 bitti tai \emph{kaksinkertaisen tarkkuuden} liukuluvuiksi, jolloin mantissaa varten varataan 52 bittiä, suunnattua eksponenttia varten 11 bittiä ja merkkiä varten taaskin 1 bitti. Eräät yhdistelmät on varattu tarkoittamaan $\pm 0$:aa, $\pm\infty$:tä ja ''epälukuja'' eli \texttt{NaN}:ia. Jälkimmäinen tapaus tulee kyseeseen esim. ''laittoman'' jakolaskun $\frac{0}{0}$ tuloksena. Tarkempia tietoja varten ks. \cite{amd} ja/tai \cite{ieee754}.
+\subsection{Vähennyslaskuongelma}\label{vahennyslaskuongelma}
+Liukuluvuilla operoitaessa usein unohtuu ns. \emph{vähennyslaskuongelma} (engl. catastrophic cancellation). Kysymyksessä on suhteellisen tarkkuuden menetys vähennettäessä hyvin lähellä toisiaan olevia liukulukuja toisistaan. Esimerkiksi
+\begin{equation}
+1.10011@0-1.10001@0=0.00010@0=1.0\mathit{0000}@(-4)
+\end{equation}
+jos mantissanpituus olisi ollut 5 bittiä. Tulos on kyllä periaatteessa oikein, mutta jos vähennettävät olisivat olleet likiarvoja jostakin, niin suhteellista tarkkuutta on menetetty valtavasti, tuloksessa olevat kursivoidut nollat kuvaavat lopputulokseen ''tyhjästä liu'utettuja'' nollia. Jos siis on mahdollista organisoida laskut niin, että välituloksissa ei esiinny tällaista laskutoimitusta, niin kannattaa tehdä.
+\begin{esimerkki}
+Neliöjuurilausekkeen
+\begin{equation}
+\sqrt{1+z}-1
+\end{equation}
+tilalla kannattaa käyttää mieluummin lavennettua lauseketta
+\begin{equation}
+\frac{(\sqrt{1+z}+1)(\sqrt{1+z}-1)}{\sqrt{1+z}+1}=\frac{z}{\sqrt{1+z}+1}.
+\end{equation}
+\end{esimerkki}
+
+\section{Hornerin sääntö}
+Hornerin sääntö on tärkeä evaluoitaessa polynomeja ja katkaistuja sarjoja. Se on ''perusmuodossaan''
+\begin{equation}
+\sum_{k=0}^{n-1}a_k z^k=a_0+z\sum_{k=0}^{n-2}a_{k+1} z^k
+\label{hornerinsaanto}
+\end{equation}
+Tietokonelaskentaa varten tämä kaava on kuitenkin sellaisenaan huono, johtuen sen eturekursiivisuudesta. Ongelma syntyy siitä, että tuloa $z\sum_{k=0}^{n-2}a_{k+1} z^k$ ei voida evaluoida ennen kuin koko jälkimmäisen summan arvo on tiedossa ja tämä kuormittaa tietokoneessa pinoa ja lisää muistiliikennettä, jos polynomi on hyvin moniterminen. Evaluointijärjestystä on kuitenkin mahdollista muuttaa niin, että kertoimet $a_k$ käsiteltäisiinkin järjestyksessä suurimmasta pienimpään! Havainnollistetaan tätä tapauksella $n=5$:
+\begin{equation}
+a_0+a_1 z+a_2 z^2+a_3 z^3+a_4 z^4 =
+a_0+z\left(a_1+z \left(a_2+z \left(a_3+a_4 z\right)\right)\right)
+\end{equation}
+Tämä on helppo purkaa seuraavanlaisiksi sijoituksiksi laskemalla sulkulausekkeet sisimmästä uloimpaan:
+\begin{eqnarray}
+t_0 & := & a_4 \nonumber\\
+t_1 & := & a_3+t_0 z \nonumber\\
+t_2 & := & a_2+t_1 z \nonumber\\
+t_3 & := & a_1+t_2 z \nonumber\\
+t_4 & := & \underline{a_0+t_3 z}
+\end{eqnarray}
+ja algoritmin rakenne on selvä, alustetaan $t$ polynomin suurimmalla kertoimella ja sen jälkeen suoritetaan peräjälkeen kertominen $z$:lla ja seuraavaksi suurimman kertoimen lisääminen, kunnes
+viimeisenä lisätään 0:nnen termin kerroin, jolloin laskutoimitus on valmis.
+C-kielellä \cite{c},\cite{gcc} tämä on esitetty kuvassa \ref{horneriter}.
+\begin{figure}
+\begin{verbatim}
+double horner(int n, double *a, double z) {
+        int i;
+        double t;
+        t=a[n-1];
+        for(i=n-2;i>=0;i--) {
+                t=a[i]+t*z;
+        }
+        return t;
+}
+\end{verbatim}
+\caption{Hornerin sääntö iteraatiolla}
+\label{horneriter}
+\end{figure}
+Hornerin sääntö iteraatiolla on käytössä Yacas:issa \cite{yacas} suurten polynomien evaluoinnissa (esim. eräät Taylorin sarjat), muttei \texttt{mpfr}:ssä \cite{mpfr}. Omia sovelluksia varten se olisi tietysti helposti sovellettavissa, sen sijaan useimmissa Taylorin sarjoissa on mahdollisuus pitää muistissa apumuuttujia ja päivittää niitä, ks. myöhempää lukua kosinista \ref{kosiniluku}.
+
+Hornerin sääntöä voidaan soveltaa myös rinnakkaislaskennassa hajauttamalla polynomi ensin kahtia
+\begin{equation}
+\sum_{k=0}^{n-1}a_k z^k=\sum_{k=0}^{n/2-1}a_k z^k+z^{n/2}
+\sum_{k=0}^{n/2-1}a_{k+n/2} z^k
+\label{hajautettu}
+\end{equation}
+ja laskemalla summat erikseen eri suoritussäikeissä (jolloin ne voivat moniprosessorisissa järjestelmissä päätyä eri prosessoreille). UNIX-järjestelmissä tällainen tapahtuu muodostamalla ensin prosessien välille putki \texttt{pipe(2)}-systeemikutsulla, sitten jakamalla prosessi \texttt{fork(2)}-systeemikutsulla ''vanhempi''- ja ''lapsi''-prosesseiksi sekä lukemalla ja kommunikoimalla näiden prosessien välillä \texttt{write(2)} ja \texttt{read(2)}-systeemikutsuilla. Kuvassa \ref{prosessienjako} esitelty esimerkki on
+Linux Programmer's Manual:ista \cite{linuxprogrammersmanual} \texttt{pipe(2)}-systeemikutsua käsittelevän luvun kohdalta.
+\begin{figure}
+\begin{verbatim}
+       #include <sys/wait.h>
+       #include <assert.h>
+       #include <stdio.h>
+       #include <stdlib.h>
+       #include <unistd.h>
+       #include <string.h>
+
+       int
+       main(int argc, char *argv[])
+       {
+           int pfd[2];
+           pid_t cpid;
+           char buf;
+
+           assert(argc == 2);
+
+           if (pipe(pfd) == -1) { perror("pipe"); exit(EXIT_FAILURE); }
+
+           cpid = fork();
+           if (cpid == -1) { perror("fork"); exit(EXIT_FAILURE); }
+
+           if (cpid == 0) {    /* Child reads from pipe */
+               close(pfd[1]);          /* Close unused write end */
+
+               while (read(pfd[0], &buf, 1) > 0)
+                   write(STDOUT_FILENO, &buf, 1);
+
+               write(STDOUT_FILENO, "\n", 1);
+               close(pfd[0]);
+               _exit(EXIT_SUCCESS);
+
+           } else {            /* Parent writes argv[1] to pipe */
+               close(pfd[0]);          /* Close unused read end */
+               write(pfd[1], argv[1], strlen(argv[1]));
+               close(pfd[1]);          /* Reader will see EOF */
+               wait(NULL);             /* Wait for child */
+               exit(EXIT_SUCCESS);
+           }
+       }
+\end{verbatim}
+\caption{Prosessien jakaminen UNIX-järjestelmissä}
+\label{prosessienjako}
+\end{figure}
+
+\section{Suuren tarkkuuden matemaattiset kirjastot}
+Koska tietokoneiden rekistereihin mahtuu vain rajallinen määrä tietoa (esim. aiemmin esillä olleessa \texttt{AMD64}-arkkitehtuurissa 64 bittiä per ''tavallinen'' rekisteri ja 128 bittiä per multimediarekisteri), asettaa tämä rajoituksia sille laskutarkkuudelle, joka voidaan saada käyttöön suoraan konekäskyillä. Joskus kuitenkin tarvitaan korkeampaa tarkkuutta, ja tätä varten on kehitetty erityisiä matemaattisia kirjastoja, jotka implementoivat suuren tarkkuuden luvut taulukkoina (ks. kuvaa \ref{gmprakenne}) ja näiden operaatiot näihin taulukoihin kohdistuvina ohjelmina. Tässä erikoistyössä käytetään tarpeen mukaan esimerkkinä \texttt{GNU GMP}:tä \cite{gmp} ja sen oheen suunniteltua funktioapukirjastoa \texttt{mpfr}:ää \cite{mpfr}.
+\begin{figure}
+\begin{verbatim}
+typedef struct
+{
+  int _mp_alloc;                /* Number of *limbs* allocated and pointed
+                                   to by the _mp_d field.  */
+  int _mp_size;                 /* abs(_mp_size) is the number of limbs the
+                                   last field points to.  If _mp_size is
+                                   negative this is a negative number.  */
+  mp_limb_t *_mp_d;             /* Pointer to the limbs.  */
+} __mpz_struct;
+\end{verbatim}
+\caption{GNU GMP:n suuren tarkkuuden lukujen perusrakenne (tiedostosta \texttt{/usr/include/gmp.h}). \texttt{\_\_mpz\_struct} muodostaa muistiosoitteesta \texttt{\_mp\_d} alkavan \texttt{\_mp\_alloc}-kokoisen taulukon, jota käytetään suurten kokonaislukujen esittämiseen. Murtoluvut ja liukuluvut on toteutettu tällaisia rakenteita yhdistämällä.}
+\label{gmprakenne}
+\end{figure}
+
+\chapter{Kerto- ja jakolaskut}
+Kerto- ja jakolaskut ovat tietokoneissa olennaisia peruslaskutoimituksia. Monissa arkkitehtuureissa ne on toteutettu myös mikroprosessorikäskyinä, jolloin sellaisen käskyn suorittaminen tyypillisesti tarkoittaa tehokkaan prosessorin sisäisen mikrokoodiohjelman suorittamista. Tässä luvussa käsitellään erikseen, millaiset kertolaskumenetelmät sopivat pienen tarkkuuden ja millaiset suuren tarkkuuden luvuille. Lisäksi käsitellään nopean kertolaskun käyttö jakolaskun apuna. Aloitetaan tärkeästä apulauseesta
+\begin{lause}[Diskreetti konvoluutio]
+Kahden itseisesti suppenevan sarjan Cauchy-tulo on
+\begin{equation}
+\left(\sum_{k=0}^\infty a_k z^k\right)\left(\sum_{k=0}^\infty b_k z^k\right)=
+\sum_{k=0}^\infty c_k z^k
+\label{polynomientulo}
+\end{equation}
+missä
+\begin{equation}
+c_k=\sum_{i=0}^{k}a_i b_{k-i}
+\label{diskreettikonvoluutio1}
+\end{equation}
+eli
+\begin{equation}
+(c_k)=(a_k)\ast(b_k).
+\label{diskreettikonvoluutio2}
+\end{equation}
+Jono $(c_k)$ on jonojen $(a_k)$ ja $(b_k)$ \emph{diskreetti konvoluutio}.
+\end{lause}
+
+\section{Pitkä kertolaskumenetelmä}
+Tämä on varsin triviaali menetelmä, jossa kaavan (\ref{polynomientulo}) vasen puoli vain kirjoitetaan uusiksi seuraavasti (lisäoletuksena, että polynomit nyt ovat $n$-asteisia):
+\begin{eqnarray}
+\left(\sum_{k=0}^n a_k z^k\right)\left(\sum_{k=0}^n b_k z^k\right) & = & \nonumber\\
+\left(\sum_{k=0}^n a_k z^k\right)\left(\sum_{i=0}^n b_i z^i\right) & = & \nonumber\\
+\left(\sum_{k=n}^0 a_k z^k\left(\sum_{i=n}^0 b_i z^i\right)\right)
+\label{pitkakertolasku}
+\end{eqnarray}
+Huomaa, että kaavassa (\ref{pitkakertolasku}) on summaussuunta käännetty. Tämä johtuu siitä, että joskus tarvitaan tulosta vain likiarvo ja tällöin on tietysti syytä evaluoida ensisijaisesti eniten merkitseviä bittejä kuin vähemmän merkitseviä. Kysymykseen tulee myös se, että jonosta $(b_k)$ olisi samankaltaisesta pyöristyssyystä katkaistu pois matalaindeksisiä termejä. Binaarilukuesimerkki, jossa laskutoimitus on järjestetty allekkain kuvassa \ref{binkertolasku}.
+\begin{figure}
+\begin{verbatim}
+  10011
+x 10101
+=======
+  10101
+     10101
+      10101
+===========
+   ***
+  110001111
+\end{verbatim}
+\caption{Binaarilukujen kertolasku pitkällä kertolaskumenetelmällä. Tähdet ovat muistinumeron käytön merkkinä. Muutamia alimpia bittejä olisi voinut katkaista laskutoimituksesta pois, jos olisi haluttu tyytyä esim. vain $2^{-4}$:n suhteelliseen tarkkuuteen.}
+\label{binkertolasku}
+\end{figure}
+
+\texttt{GNU GMP} \cite{gmp} ja \texttt{mpfr} \cite{mpfr} käyttävät pitkää kertolaskumenetelmää (joskin korkeammalla kantaluvulla kuin 2:lla) sellaisiin kertolaskuihin, joissa kerrottavat eivät ole kovin suuria. Käytännössä tätä säädetään makroilla \texttt{SQR\_BASECASE\_THRESHOLD}, \texttt{SQR\_KARATSUBA\_THRESHOLD} ja \texttt{SQR\_TOOM3\_THRESHOLD}, jotka määrittävät, tuleeko käyttöön pitkän kertolaskumenetelmän sijasta jompikumpi kahdesta seuraavana esiteltävistä menetelmistä. Fourier-menetelmä \emph{ei ole} näissä matemaattisissa kirjastoissa ''automaattisesti'' käytössä, koska käytännössä on havaittu Toom-3-menetelmän olevan numeerisesti lähes yhtä tehokas (ks. edempää).
+
+\section{Toom-Cook-menetelmät}
+Näissä menetelmissä hyödynnetään interpolaatiopolynomeja.
+Tarkastellaan esim. seuraavaa polynomien kertolaskua:
+\begin{equation}
+\underbrace{\left(\sum_{k=0}^m a_k z^k\right)}_{=P(z)}
+\underbrace{\left(\sum_{k=0}^n b_k z^k\right)}_{=Q(z)} =
+\sum_{k=0}^{m+n} c_k z^k
+\label{polynomientulo2}
+\end{equation}
+Huomio kiinnittyy siihen, että $m$ ja $n$-asteisten polynomien tulo on $m+n$-asteen polynomi. Toisaalta tällaisen polynomin kiinnittää $m+n+1$ datapistettä. Ideana on siis se, että valitaan $m+n+1$ referenssipistettä, evaluoidaan molemmat polynomit, $P$ ja $Q$ näissä ja lasketaan pisteittäin tulot. Sen jälkeen sovitetaan saadun datapisteistön läpi interpolaatiopolynomi, joka onkin suoraan polynomi $PQ$. Tutkitaan erikseen kolmea erityyppistä Toom-Cook-menetelmää
+\subsection{Toom-2 ja Karatsuban algoritmi}
+Olkoon $P(z)=a_0+a_1 z$ ja $Q(z)=b_0+b_1 z$. Valitaan referenssipisteistöksi $z\in\{0,1,-1\}$ ja saadaan
+\begin{equation}
+\left\{
+\begin{array}{lclcl}
+c_0 & = & P(0)Q(0) & = & a_0 b_0 \\
+c_0+c_1+c_2 & = & P(1)Q(1) & = & (a_0+a_1)(b_0+b_1) \\
+c_0-c_1+c_2 & = & P(-1)Q(-1) & = & (a_0-a_1)(b_0-b_1)
+\end{array}
+\right.
+\label{toom2}
+\end{equation}
+On selvää, ettei koko ryhmän (\ref{toom2}) evaluoiminen kovin paljoa yksinkertaista itse kertolaskua. Huomio kiinnittyy kuitenkin seikkaan, että jos $c_0$ eliminoidaan, saadaan ryhmä
+\begin{equation}
+\left\{
+\begin{array}{lclcl}
+c_1+c_2 & = & (a_0+a_1)(b_0+b_1)-a_0 b_0 \\
+-c_1+c_2 & = & (a_0-a_1)(b_0-b_1)-a_0 b_0
+\end{array}
+\right.
+\label{toom21}
+\end{equation}
+ja siksi toiseksi, ilmeisesti on $c_2=a_1 b_1$ kaavan (\ref{diskreettikonvoluutio1}) mukaan. Eliminoimalla tällä säännöllä $c_2$ yhtälöparin (\ref{toom21}) ylemmästä yhtälöstä, saadaan
+\begin{equation}
+c_1=(a_0+a_1)(b_0+b_1)-a_0 b_0-a_1 b_1
+\end{equation}
+Riittää siis suorittaa pitkän kertolaskualgoritmin vaatiman neljän kertolaskun sijasta vain kolme, eli
+\begin{eqnarray}
+c_0 & = & a_0 b_0 \nonumber\\
+c_2 & = & a_1 b_1 \nonumber\\
+c_1 & = & (a_0+a_1)(b_0+b_1)-c_0-c_2.
+\label{karatsuba}
+\end{eqnarray}
+Kaavaa (\ref{karatsuba}) sanotaan \emph{Karatsuban algoritmiksi}. Se on alunperin keksitty ilman viittausta Toom-Cook-menetelmiin, mutta on mielenkiintoista huomata, että se on erikoistapaus yleisemmästä kertolaskumenetelmästä.
+\subsection{Toom-3}
+Tämä on erittäin tavallinen Toom-Cook-menetelmä. Siinä kerrottavat polynomit $P$ ja $Q$ ovat toisen asteen polynomeja ja referenssipisteistöksi valitaan $z\in\{0,1,-1,2,-2\}$. Se johtaa yhtälöryhmään
+\begin{equation}
+\left(
+\begin{array}{cccc}
+1 & 1 & 1 & 1 \\
+-1 & 1 & -1 & 1 \\
+2 & 4 & 8 & 16 \\
+-2 & 4 & -8 & 16
+\end{array}
+\right)
+\left(
+\begin{array}{c}
+c_1 \\ c_2 \\ c_3 \\ c_4
+\end{array}
+\right)=
+\left(
+\begin{array}{c}
+P(1)Q(1)-P(0)Q(0) \\
+P(-1)Q(-1)-P(0)Q(0) \\
+P(2)Q(2)-P(0)Q(0) \\
+P(-2)Q(-2)-P(0)Q(0) \\
+\end{array}
+\right)
+\end{equation}
+toisin sanoen
+\begin{equation}
+\left(
+\begin{array}{cccc}
+1 & 1 & 1 & 1 \\
+-1 & 1 & -1 & 1 \\
+2 & 4 & 8 & 16 \\
+-2 & 4 & -8 & 16
+\end{array}
+\right)
+\left(
+\begin{array}{c}
+c_1 \\ c_2 \\ c_3 \\ c_4
+\end{array}
+\right)=
+\left(
+\begin{array}{c}
+(a_0+a_1+a_2)(b_0+b_1+b_2)-a_0 b_0 \\
+(a_0-a_1+a_2)(b_0-b_1+b_2)-a_0 b_0 \\
+(a_0+2a_1+4 a_2)(b_0+2b_1+4b_2)-a_0 b_0 \\
+(a_0-2a_1+4 a_2)(b_0-2b_1+4b_2)-a_0 b_0
+\end{array}
+\right)
+\end{equation}
+jonka ratkaisu on
+\begin{equation}
+\left(
+\begin{array}{c}
+c_1 \\ c_2 \\ c_3 \\ c_4
+\end{array}
+\right)=
+\frac{1}{24}
+\left(
+\begin{array}{cccc}
+16 & -16 & -2 & 2 \\
+16 & 16 & -1 & -1 \\
+-4 & 4 & 2 & -2 \\
+-4 & -4 & 1 & 1
+\end{array}
+\right)
+\left(
+\begin{array}{c}
+(a_0+a_1+a_2)(b_0+b_1+b_2)-a_0 b_0 \\
+(a_0-a_1+a_2)(b_0-b_1+b_2)-a_0 b_0 \\
+(a_0+2a_1+4 a_2)(b_0+2b_1+4b_2)-a_0 b_0 \\
+(a_0-2a_1+4 a_2)(b_0-2b_1+4b_2)-a_0 b_0
+\end{array}
+\right).
+\label{toom3ratkaisu}
+\end{equation}
+Järkeä voi jälleen käyttää huomioimalla että $c_0=a_0 b_0$, $c_4=a_2 b_2$ ja että suuri osa kertolaskuista on $2$:n potensseilla kertomisia, mitkä tietokoneissa merkitsevät pelkästään bittien liu'uttamista vasemmalle tai liukuluvun eksponentin nostoa, eivätkä siis ole kompleksisuudeltaan varsinaisia ''kertomisia''. Korostettakoon, että tämä menetelmä on järkevä vain \emph{suurten} lukujen kertolaskujen hajottamiseksi. Kun luvut ovat tarpeeksi pieniä, tulee siirtyä Karatsuban algoritmiin ja sitten pitkään kertolaskumenetelmään.
+
+\subsection{Kompleksinen referenssipisteistö ja Fourier-muunnos}
+Merkitään 
+\begin{equation}
+W_n=\exp\left(\frac{2\hat\imath\pi}{n}\right)
+\end{equation}
+jolloin pisteet $\{W_n^k:\ k\in 0..n-1\}$ muodostavat yksikköympyrälle tasasivuisen $n$-kulmion kärjet. Valitaan nyt referenssipisteistöksi origo ja mainitut pisteet, eli $z\in\{0,1,W_n,W_n^2,...W_n^{n-1}\}$. Yhtälöryhmä koostuu nyt triviaalista yhtälöstä $c_0=a_0 b_0$ sekä useammista tyyppiä
+\begin{equation}
+\sum_{\ell=0}^{n-1}W_n^{\ell k}c_\ell=\left(\sum_{\ell=0}^{n-1}W_n^{\ell k} a_\ell\right)\left(\sum_{\ell=0}^{n-1}W_n^{\ell k} b_\ell\right)
+\label{kompleksiyhtaloryhma}
+\end{equation}
+olevista yhtälöistä. Jos merkitään kompleksisina vektoreina
+\begin{equation}
+\mathbf{w_k}=(1,W_n^k,W_n^{2k},..,W_n^{(n-1)k})^T
+\end{equation}
+niin $\mathbf{w_0}..\mathbf{w_{n-1}}$ muodostavat keskenään ortonormaalin kannan sisätulon
+\begin{equation}
+<\mathbf{u},\mathbf{v}>=\frac{1}{n}\mathbf{v}^*\mathbf{u}
+\end{equation}
+nojalla. Tässä siis $*$ on kompleksikonjugoinnin ja transponoinnin yhdistelmä. Tämä tarkoittaa sitä, että yhtälöryhmän (\ref{kompleksiyhtaloryhma}) vasemmalle puolelle tuleva matriisi on mahdollista kääntää vain kompleksikonjugoimalla, transponoimalla ja jakamalla $n$:llä.
+
+Polynomien $P$ ja $Q$ tulo voidaan siis laskea esimerkiksi ottamalla molemmista Fourier-muunnos kaavan
+\begin{equation}
+\mathcal{F}_k(\mathbf{a})=\sum_{\ell=0}^{n-1}W_n^{\ell k}a_\ell
+\label{fouriermuunnos}
+\end{equation}
+mukaan ($Q$:n kertoimille sama juttu) ja laskemalla sitten pisteittäin tulot
+\begin{equation}
+\gamma_k=\mathcal{F}_k(\mathbf{a})\mathcal{F}_k(\mathbf{b})
+\end{equation}
+Tämän jälkeen lopputulos käänteismuunnetaan kaavalla
+\begin{equation}
+c_k=\frac{1}{n}\sum_{\ell=0}^{n-1}W_n^{-\ell k}\gamma_\ell.
+\label{kaanteismuunnos}
+\end{equation}
+Tähän tulokseen oltaisiin voitu päätyä myös tarkastelemalla sitä konvoluution ominaisuutta, että sitä vastaa Fourier-muunnospuolella pisteittäinen tulo, mutta tämä käsittelytapa on valittu sen seikan tähdentämiseksi, että Fourier-muunnoksiin perustuva kertolaskumenetelmä on myös Toom-Cook-menetelmän erikoistapaus.
+
+\subsection{Nopea Fourier-muunnos}
+Fourier-muunnoksessa on etuna se, että se on mahdollista ottaa kumpaankin suuntaan nopealla kahtiajakomenetelmällä, mikäli muunnettavat vektorit ovat $2^N$-jäsenisiä.
+\footnote{Myös muunlaisiakin vektoreita varten on nopeita Fourier-muunnoskaavoja, mutta tässä ne sivuutetaan, koska kertolaskua varten riittää se, että vektorit tarvittaessa täydennetään suurempikokoisiksi.}
+Kahtiajakomenetelmän idea on
+\begin{eqnarray}
+\mathcal{F}_k(\mathbf{a}) & = & \sum_{\ell=0}^{n-1}W_n^{\ell k}a_\ell \\
+& = & \sum_{\ell=0}^{n/2-1}W_n^{2 \ell k}a_{2 \ell}+
+W_n^k\sum_{\ell=0}^{n/2-1}W_n^{2\ell k}a_{2 \ell+1}
+\label{kahtiajako}
+\end{eqnarray}
+eli sanallisesti
+\begin{eqnarray}
+\mathcal{F}(\mathrm{kaikki\ indeksit}) & = &
+\mathcal{F}(\mathrm{parilliset\ indeksit})+ \nonumber\\
+& & \mathrm{siirtokerroin}\cdot\mathcal{F}(\mathrm{parittomat\  indeksit})
+\end{eqnarray}
+Siirtokerroin on kaavassa (\ref{kahtiajako}) muutettava muotoon $W_n^{-k}$ muunnettaessa käänteiseen suuntaan sen lisäksi, että tulos on jaettava $n$:llä.
+\begin{esimerkki}
+Halutaan laskea binaariluvuilla $5\cdot 3$. Tätä varten asetetaan
+\begin{equation}
+\mathbf{a}=\left(1\ 0\ 1\ 0\right)^T
+\end{equation}
+ja
+\begin{equation}
+\mathbf{b}=\left(1\ 1\ 0\ 0\right)^T
+\end{equation}
+Nyt on
+\begin{eqnarray}
+\mathcal{F}(\left(1\ 0\ 1\ 0\right)^T) & = & \mathcal{F}(\left(1\ 1\right)^T) \nonumber\\
+& = & 1+W_2^k
+\end{eqnarray}
+ja
+\begin{eqnarray}
+\mathcal{F}(\left(1\ 1\ 0\ 0\right)^T) & = & \mathcal{F}(\left(1\ 0\right)^T)+
+W_4^k \mathcal{F}(\left(1\ 0\right)^T) \nonumber\\
+& = & 1+W_4^k.
+\end{eqnarray}
+$\gamma$ voidaan nyt generoida lausekkeesta $(1+W_2^k)(1+W_4^k)$, jolloin saadaan
+\begin{equation}
+\gamma=\left(4\ 0\ 0\ 0\right)^T
+\end{equation}
+ja lopulta
+\begin{equation}
+\mathcal{F}^{-1}(\gamma)=\frac{1}{4} W_0^k=\left(1\ 1\ 1\ 1\right)^T
+\end{equation}
+Vastaus on oikein, koska todellakin $1111_2=15$. On huomattava, että jos olisi laskettu vähänkin isommilla luvuilla, esim. $3\cdot 6$ olisi pitänyt ennemminkin alustaa
+$\mathbf{a}=\left(0\ 1\ 1\ 0\ 0\ 0\ 0\ 0\right)^T$ ja
+$\mathbf{b}=\left(1\ 1\ 0\ 0\ 0\ 0\ 0\ 0\right)^T$, koska muuten olisi ylimpiä bittejä
+''leikkautunut'' pois.
+\end{esimerkki}
+Nopeiden Fourier-muunnosten menetelmä on varsinaisesti käytännöllinen vain hyvin suurille luvuille, eikä se ole lainkaan käytössä automaattisesti \texttt{GMP}:ssä \cite{gmp} eikä \texttt{mprf}:ssä \cite{mpfr}, kuten aiemmin jo todettiin. Eräs merkittävä matemaattinen kirjasto, joka on laadittu nopeiden Fourier-muunnosten ottamiseksi, on FFTW \cite{fftw}.
+
+\section{Jakolasku}
+\subsection{Jakokulma}
+Tavallisin jakolaskumenetelmä pienille luvuille on ns. pitkä jakolaskumenetelmä, joka on sama kuin ''kynällä ja paperilla'' toimitettava jakokulma. Laskettaessa $y/x$:ää $q$-kantaisilla luvuilla pyritään ensin liu'utuksien avulla saamaan aikaan tilanne, jossa $x$ on korkeintaan $y$, mutta $y$ alle $qx$, ts.
+\begin{equation}
+\frac{y}{q} < x \le y.
+\label{jakoehto}
+\end{equation}
+Sen jälkeen sovelletaan peräjälkeen kaavaa
+\begin{equation}
+\frac{y}{x}=d+\frac{y-d\cdot x}{x}
+\end{equation}
+missä $d$ on uusi numero $q$-kantaisessa kehitelmässä ($y/x$:n kokonaisosa). Sen jälkeen sijoitetaan $y$:n paikalle $y-d\cdot x$ ja jatketaan kertomalla $x$:ää taas sopivan monta kertaa $q$:lla, jotta ehto (\ref{jakoehto}) täyttyisi. Jos joudutaan kertomaan $q$:lla useamman kuin kerran, lisätään kehitelmään näillä kerroilla $0$. Jakokulma on \texttt{GMP}:ssä \cite{gmp} ja \texttt{mpfr} \cite{mpfr} tavanomainen menetelmä lyhyillä luvuilla ja pienellä tarkkuudella laskettaessa. Sovelluksissa, joissa ei ole nopeaa kertolaskumenetelmää ja tarkkuusvaatimus pieni, käytetään jakokulmaa ''bitti kerrallaan''-periaatteella tyyliin
+\begin{equation}
+\frac{y}{x}=\left\{
+\begin{array}{lll}
+2\left(\frac{y}{2x}\right) & , & y\ge 2x \\
+1+\frac{y-x}{x} & , & x<y<2x \\
+1 & , & y=x \\
+2^{-1}\left(\frac{2y}{x}\right) & , & y<x
+\end{array}
+\right.
+\end{equation}
+\subsection{Geometrinen sarja päättymättömänä tulona}
+Oletetaan, että käytössä on nopea kertolaskumenetelmä ja että jakaja ja jaettava ovat huomattavan suuria. Tällöin tulee kyseeseen kaavan $y/x=x^{-1} y$ hyväksikäyttö. Tässä tapauksessa on myös syytä operoida normalisoiduilla binaarisilla liukuluvuilla. Liu'utusten avulla on aina mahdollista palauttaa mielivaltaisen luvun invertoiminen jonkun luvun
+muotoa $1-x, x\in[0,1/2)$ invertoimiseksi ja tätä voidaan käyttää tehokkaasti hyväksi. Tällä lukualueella pätee Taylorin sarjakehitelmä
+\begin{equation}
+(1-x)^{-1}=\sum_{k=0}^\infty x^k=1+x+x^2+x^3+...
+\end{equation}
+Mutta toisaalta tämä voidaan vaihtoehtoisesti lausua päättymättömänä tulona
+\begin{equation}
+(1+x)(1+x^2)(1+x^4)(1+x^8)...=\prod_{k=0}^\infty\left(1+x^{2^k}\right)
+\end{equation}
+eli algoritmina
+\begin{eqnarray}
+t_0 & := & x\cdot x \nonumber\\
+r_0 & := & 1+x \nonumber\\
+t_{k+1} & := & t_k \cdot t_k \nonumber\\
+r_{k+1} & := & r_k \cdot (1+t_k)
+\end{eqnarray}
+Kaksi tuloa joka kierroksella kaksinkertaistavat bittien/desimaalien määrän. Tätä on havainnollistettu esimerkkiohjelmalla (kuva \ref{paattymatontulo}) ja sen tulosteella \ref{ptkokeilu}.
+\begin{figure}
+\begin{verbatim}
+#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+        int i;
+        double x,r;
+        printf("Syötä invertoitava luku 0.5<x<=1: ");
+        scanf("%lf",&x);
+        x=1-x;
+        r=1.0;
+        for(i=0;i<10;i++) {
+                r=r+r*x;
+                x=x*x;
+                printf("%17.15lf\n",r);
+        }
+        return 0;
+}
+\end{verbatim}
+\caption{Jakolasku päättymättömän tulon avulla (C-ohjelma)}
+\label{paattymatontulo}
+\end{figure}
+
+\begin{figure}
+\begin{verbatim}
+Syötä invertoitava luku 0.5<x<=1: .7
+1.300000000000000
+1.417000000000000
+1.428477700000000
+1.428571422421897
+1.428571428571429
+1.428571428571429
+1.428571428571429
+1.428571428571429
+1.428571428571429
+1.428571428571429
+\end{verbatim}
+\caption{Esimerkkituloste ohjelmasta \ref{paattymatontulo}}
+\label{ptkokeilu}
+\end{figure}
+
+\chapter{Funktioiden evaluointi}
+
+\section{Approksimointi}
+Kun yhteen-, vähennys-, kerto- ja jakolaskulle on kehitetty tehokkaat ja tarkat algoritmit, tulee kyseeseen näiden hyödyntäminen monimutkaisempien funktioiden approksimoinnissa. Approksimoinnin yleisenä ideana on, että approksimoiva funktio $g$ täyttäisi täysin tai likimääräisesti joitakin approksimoitavaa funktiota $f$ koskevia ehtoja. Näitä voivat olla mm. $g$:n yhtyminen $f$:ään tietyissä pisteissä, $g$:n derivaattojen yhtyminen $f$:n derivaattoihin tietyissä pisteissä tai integraalin $\int_{\Omega}\ |f-g|^p\ d\mu$ minimoiminen (ks. esim. \cite{approksimaatioteoria}). Tässä käsitellään vain kahta ensinmainittua approksimointitapaa.
+\subsection{Polynomiapproksimointi}
+Tyypillisin ja monesti hyödyllisin polynomiapproksimaatio on Taylorin polynomit- ja sarjat. Tällöin funktion $f$, $n-1$-asteinen kehitelmä pisteessä $z_0$ on
+\begin{equation}
+f(z)=\sum_{k=0}^{n-1}\frac{f^{(k)}(z_0)}{k!}(z-z_0)^k\ +
+\ \underbrace{\frac{f^{(n)}(\xi)}{n!}(z-z_0)^n}_{=R_n}
+\end{equation}
+missä $\xi\in[z_0,z]$. Taylorin polynomit ovat hyödyllisiä sellaisten funktioiden kohdalla, joilla ei ole napoja, oleellisia erikoispisteitä tai heikkoja singulariteetteja. Joissakin tapauksissa voi olla paikallaan hyödyntää funktion ominaisuuksia useammassa kuin yhdessä pisteessä, jos esimerkiksi tunnetaan $f(0)$, $f'(0)$, $f(1)$ ja $f'(1)$, voidaan hakea 3. asteen approksimaatio $f(z)\approx a_0+a_1 z+a_2 z^2+a_3 z^3$ ratkaisemalla yhtälöryhmä
+\begin{equation}
+\left\{
+\begin{array}{lcl}
+a_0 & = & f(0) \\
+a_1 & = & f'(0) \\
+a_0 + a_1 + a_2 +a_3 & = & f(1) \\
+a_1+2a_2+3a_3 & = & f'(1)
+\end{array}
+\right.
+\end{equation}
+
+\subsection{Rationaaliapproksimointi}
+Rationaaliapproksimoinnin ideana on, että funktio $R(z)=P(z)/Q(z)$ täyttäisi e.m. ''hyviä'' approksimoinnin ominaisuuksia. Merkittävimmässä asemassa tässä suhteessa ovat Pad\'e-approksimaatiot, jotka ovat tyyppiä $R_{m,n}(z)=P_m(z)/Q_n(z)$, missä $P$ on $m$. asteen polynomi, $Q$ $n$. asteen polynomi ja approksimaatio yhtyy halutussa pisteessä $f$:n $m+n$. derivaattaan asti. Pad\'e-approksimaatioita voidaan muodostaa useilla tavoilla, mutta suoraviivaisin on laskea ensin $f(z)$:lle $m+n$. asteen Taylorin polynomi ja sitten ratkaista kertoimia Cauchy-tulon $Q_n(z)R_{m,n}(z)=P_m(z)$ virittämästä yhtälöryhmästä. Ks. kaavaa (\ref{diskreettikonvoluutio1}).
+\begin{esimerkki}
+Olkoon approksimoitava funktio $f(z)=1+r_1 z+r_2 z^2+r_3 z^3+r_4 z^4+...\approx R_{2,2}(z)$.
+Tällöin saadaan $P(z)=1+p_1 z+p_2 z^2$:n ja $Q(z)=1+q_1 z+q_2 z^2$:n kertoimille yhtälöryhmä
+\begin{eqnarray}
+p_1 & = & q_1+r_1 \nonumber\\
+p_2 & = & q_2+r_1 q_1+r_2 \nonumber\\
+0 & = & r_1 q_2+r_2 q_1+r_3 \nonumber\\
+0 & = & r_2 q_2+r_3 q_1+r_4
+\end{eqnarray}
+mikä on matriisimuodossa
+\begin{equation}
+\left(
+\begin{array}{cccc}
+1 & 0 & -1 & 0 \\
+0 & 1 & -r_1 & -1 \\
+0 & 0 & -r_2 & -r_1 \\
+0 & 0 & -r_3 & -r_2
+\end{array}
+\right)
+\left(
+\begin{array}{c}
+p_1 \\ p_2 \\ q_1 \\ q_2
+\end{array}
+\right)=
+\left(
+\begin{array}{c}
+r_1 \\ r_2 \\ r_3 \\ r_4
+\end{array}
+\right).
+\label{pade224}
+\end{equation}
+\end{esimerkki}
+Kaavan (\ref{pade224}) perusteella voidaan yleisemminkin päätellä, että Pad\'e-approksimaatioiden muodostamismatriisit ovat kohtalaisen harvaa ja helposti ratkeavaa muotoa
+\begin{equation}
+M=\left(
+\begin{array}{c|c}
+I & M_1 \\
+\hline
+0 & M_2 \\
+\end{array}
+\right)
+\end{equation}
+missä $I$ on identiteettimatriisi, $0$ nollamatriisi, $M_1$ alakolmionauhamatriisi, ''nauhoina''
+$-1$:t ja $-r_k$:t ja $M_2$ nauhamatriisi ''nauhoina'' $-r_k$:t. Käytännössä ainoastaan matriisiyhtälön
+\begin{equation}
+M_2\,\mathbf{q}=\mathbf{r}^\uparrow
+\label{padenimittaja}
+\end{equation}
+\footnote{Tässä $\mathbf{q}=(q_1\ q_2\ ...)^T$ ja $\mathbf{r}^\uparrow$ on vektorin $\mathbf{r}=(r_1\ r_2\  ...)^T$ tarpeeksi korkeat kertoimet, ylläolevassa $R_{2,2}$-tapauksessa $(r_3\ r_4)^T$.}
+ratkaisemisella on numeerisesti enemmän merkitystä, koska muut kertoimet saadaan sen jälkeen sijoittamalla. Pienikokoisia Pad\'e-approksimaatioita varten tähän riittää hyvin $M_2$:ien käänteismatriisien tallettaminen, mutta vähääkään isommissa tulee mieluummin kyseeseen yhtälöryhmän ratkaiseminen suoraan Gaussin algoritmilla, erityisiä Toeplitz-nauhastruktuureja \cite{toeplitz} koskevilla algoritmeilla tai $LU$-hajotelmalla \cite{lu}.
+
+\section{Neliöjuuri ja aritmeettis-harmoninen keskiarvoistaminen}
+Suosittu menetelmä $\sqrt{z}$:n laskemiseksi on lähteä liikkeelle yhtälöstä
+\begin{equation}
+z=x\cdot y
+\label{tavallinentulo}
+\end{equation}
+ja pyrkiä siihen, että oikealla puolella olevan tulon tekijät olisivat mahdollisimman lähekkäin toisiaan. Tällöin voidaan tilannetta parantaa edellisestä lausumalla
+\begin{equation}
+z=\underbrace{\frac{x+y}{2}}_{=AM(x,y)}\cdot\underbrace{\frac{2xy}{x+y}}_{=HM(x,y)}.
+\label{keskiarvoistettutulo}
+\end{equation}
+Tässä esiteltyä lauseketta $AM(x,y)$ sanotaan \emph{aritmeettiseksi keskiarvoksi} ja lauseketta
+$HM(x,y)$ \emph{harmoniseksi} eli \emph{hyperboliseksi keskiarvoksi}.
+\begin{lause}[Geometrinen keskiarvo]
+Olkoon $a_0=1$, $b_0=z$, $a_{k+1}=\frac{a_k+b_k}{2}$ ja $b_{k+1}=\frac{a_k b_k}{a_{k+1}}$.
+Tällöin
+\begin{equation}
+\lim_{k\to\infty}a_k=\lim_{k\to\infty}b_k=\sqrt{z}=GM(a_k,b_k)
+\end{equation}
+ja iteraatio suppenee kvadraattisesti. Jälkimmäistä lauseketta kutsutaan myös $a_k$:n ja $b_k$:n geometriseksi keskiarvoksi $GM(a_k,b_k)=\sqrt{a_k b_k}$.
+\begin{todistus}
+Todistetaan vain kvadraattinen suppeneminen:
+$AM(1+\epsilon,1-\epsilon)=1$, $HM(1+\epsilon,1-\epsilon)=1-\epsilon^2$ eli
+$GM(1+\epsilon,1-\epsilon)=GM(1,1-\epsilon^2)$. $\Box$
+\end{todistus}
+\label{ahm}
+\end{lause}
+Aritmeettis-harmonisessa keskiarvoistamisessa aritmeettisten keskiarvojen jonon seuraaminen vastaa tavallista Newtonin menetelmää, mutta lisäetuna on, että harmoninen keskiarvo rajaa neliöjuuren sisältävää väliä toiselta puolen, jolloin on helpompi lopettaa halutun tarkkuuden saavutettua.
+\begin{todistus}
+Ratkaistaessa yhtälöä $f(z)=a$, iteroidaan kaavan $z_{k+1}=z_k-f(z_k)/f'(z_k)$ mukaan. Yhtälölle $w=\sqrt{z}$ eli t.s. $w^2-z=0$ tämä tarkoittaa iteraatiokaavaa
+\begin{equation}
+w_{k+1}=w_k-\frac{w_k^2-z}{2w_k}=\frac{w_k^2+z}{2w_k}=\frac{w_k+
+\left(\frac{z}{w_k}\right)}{2}.\ \Box
+\end{equation}
+\end{todistus}
+
+\section{Eksponenttifunktio ja trigonometriset funktiot}
+Eksponenttifunktion, sinin ja kosinin osalta Taylorin sarjakehitelmät ovat suositeltavampia kuin Pad\'e-approksimaatiot, sillä näillä funktioilla ei ole napoja, oleellisia erikoispisteitä tai heikkoja singulariteetteja (paitsi $\infty$:ssä). Taylorin sarjat ovat niinikään pienillä arvoilla erityisen nopeasti suppenevia. Vaikka Pad\'e-approksimaatio joissakin tapauksissa antaisi näille hivenen tarkemman tuloksen, on kuitenkin kyseisen approksimaation Taylorin sarjaan verrattuna monimutkaisempi muodostaminen sen verran suuri haitta, ettei haluttua hyötyä välttämättä saavutettaisi.
+
+Kokeilun arvoinen voisi tästä huolimatta olla $R_{n,1}$-tyyppinen Pad\'e-approksimaatio, koska siinä nimittäjä saadaan (ks. kaavaa (\ref{padenimittaja})) yksinkertaisesti
+\begin{equation}
+Q(z)=1-\frac{r_{n+1}}{r_n}z
+\end{equation}
+ja osoittaja P(z) edelleen (Cauchy-)tulolla $R(z)Q(z)$, missä $R(z)$:sta ei tarvitse huomioida ylintä, $n+1$-asteen kerrointa. Toisaalta kaikkialla kompleksitasossa analyyttisillä funktioilla $n$:n kasvaessa tämä kehitelmä degeneroituu tavanomaiseksi Taylorin sarjaksi (todistettavissa sarjaopin suhdetestin avulla), jolloin esim. $R(z)Q(z)$:n laskeminen olisi hukka-aikaa. Olisi mielenkiintoista tutkia, olisiko tämä järkevää mihinkään tiettyyn $n$:ään asti.
+
+\subsection{Eksponenttifunktio}
+Eksponenttifunktiolle on olemassa Taylorin kehitelmä origossa:
+\begin{equation}
+\exp(z)=\sum_{k=0}^{n-1}\frac{z^k}{k!}\ +\ \frac{\exp(\xi)z^n}{n!},\ \xi\in[0,z]
+\label{expsarja}
+\end{equation}
+Vähennyslaskuongelman \ref{vahennyslaskuongelma} ja virhetermin muodon huomioiden, tätä sarjaa on syytä käyttää ainoastaan pienillä positiivisilla $z$:n arvoilla. Suurille negatiivisille $z$:n arvoille sarjan suorasta soveltamisesta olisi haittana alternoivuus ja väistämättä toisiaan lähellä olevien liukulukujen vähentäminen. Sen sijaan apuna käytetään yleisesti seuraavia kaavoja:
+\begin{equation}
+e^{-z}=\frac{1}{e^z}
+\label{expkaanteisluku}
+\end{equation}
+ja
+\begin{equation}
+e^{z}=e^{\frac{z}{2}}e^{\frac{z}{2}}
+\label{expkertominen}
+\end{equation}
+Kaavalla (\ref{expkaanteisluku}) voidaan aina saada evaluoitavat termit pelkästään positiivisiksi, kaavalla (\ref{expkertominen}) taas voidaan varmistaa nopea suppenevuus ja virhetermin pienuus. Potenssiin kaksi korottaminen kaksinkertaistaa suhteellisen virheen, joten se hävittää yhden merkitsevän bitin lopputuloksesta. Tämä tarkoittaa sitä, että numeeriset kirjastot tässä kohden usein \emph{balansoivat} sarjan (\ref{expsarja}) termien lukumäärän ja kaavan (\ref{expkertominen}) soveltamisten kanssa riippuen etukäteen päätetystä tarkkuusvaatimuksesta. \texttt{mpfr} \cite{mpfr} käyttää tätä menetelmää eksponenttifunktion evaluoimiseksi.
+
+\subsection{Kosini}
+Tarkastellaan tässä ainoastaan kosinia. Muut trigonometriset funktiot on nimittäin mahdollisuus laskea helposti kosinin avulla
+\begin{eqnarray}
+\sin z & = & \sqrt{1-\cos^2 z}=\cos\left(\frac{\pi}{2}-z\right) \\
+\tan z & = & \frac{\sin z}{\cos z}.
+\end{eqnarray}
+Kosinifunktion $2n-2$-asteinen Taylorin kehitelmä origossa on
+\begin{equation}
+\cos z=\sum_{k=0}^{n-1}\frac{(-1)^k z^{2k}}{(2k)!}\ +\ O(z^{2n})
+\label{cossarja}
+\end{equation}
+\footnote{Tässä voidaan virhetermiä arvioida ottamalla yksinkertaisesti sarjasta seuraava termi.}
+Taaskin on huomattava, ettei sarjaa \ref{cossarja} kannata soveltaa kuin hyvin pienillä kulman arvoilla eikä koskaan yli $\frac{\pi}{4}$:n (muunnoskaavat), joten kulmia kannattaa puolittaa kosinin summakaavaa hyväksi käyttäen:
+\begin{equation}
+\cos z=2 \cos\left(\frac{z}{2}\right)\cos\left(\frac{z}{2}\right)-1
+\label{kulmanpuolitus}
+\end{equation}
+Kosinin evaluointi Taylorin sarjan ja kulmanpuolituksen yhdistelmällä on jälleenkin käytössä \texttt{mpfr}:ssä \cite{mpfr} kuten eksponenttifunktionkin tapauksessa. Taylorin sarjan evaluoinnissa ei ole käytössä Hornerin sääntö suoraan, mutta sen sijaan sarjan termejä voidaan kätevästi laskea kertomalla edellistä sopivalla kertoimella, s.o.
+\begin{eqnarray}
+t_0=s_0 & := & 1 \nonumber\\
+t_{k+1} & := & -\frac{z^2 t_k}{(2k+1)(2k+2)} \nonumber\\
+s_{k+1} & := & s_k+t_{k+1}.
+\end{eqnarray}
+jolloin $s_k \to \cos(z)$ nopeasti kun $z$ on pieni ja muuten asiaa autetaan jaksollisuusominaisuudet huomioiden sekä kaavalla
+(\ref{kulmanpuolitus}).
+
+Sama huomautus kuin eksponenttifunktion kohdalla koskien sarjan (\ref{cossarja}) termien lukumäärää ja kaavan (\ref{kulmanpuolitus}) sovelluskertoja. Hyperbolisten funktioiden osalta voidaan käydä tälle analoginen tarkastelu, joka sivuutetaan.
+\label{kosiniluku}
+\section{Logaritmi ja $\pi$}
+\subsection{Yleistä}
+Tässä käsitellään näiden osalta kaksi eri lähestymistapaa, pienen tarkkuuden luvuille ja suuren tarkkuuden luvuille, koska nämä lähestymistavat poikkeavat toisistaan huomattavasti.
+
+Pienen tarkkuuden luvuille tulee kyseeseen edellisten tapaan verraten yleiset rationaaliapproksimaatioiden ja kulmanpuolitusten yhdistelmät. Tällä kertaa Pad\'e-approksimaatiolla on myöskin enemmän merkitystä johtuen käsittelyssä olevien funktioiden oleellisista erikoispisteistä.
+
+Suuren tarkkuuden luvuille taas käytetään aritmeettis-geometrista keskiarvoistamista ja nopeasti suppenevien sarjojen summia. Eräät sarjat soveltuvat mm. hyvin $\pi$:n tai logaritmien arvojen laskemiseen siten, että halutaan vain joitakin tiettyjä pitkällä kehitelmässä esiintyviä desimaaleja tai bittejä laskematta kaikkia aikaisempia.
+
+\subsection{Arkustangentti ja kulmanpuolitus}
+Logaritmin sijasta kannattaa usein tarkastella ennemminkin funktioita
+\begin{equation}
+\arctan(z)=z-\frac{z^3}{3}+\frac{z^5}{5}-\frac{z^7}{7}+...\ ,|z|<1
+\end{equation}
+ja
+\begin{equation}
+\mathrm{arctanh}(z)=z+\frac{z^3}{3}+\frac{z^5}{5}+\frac{z^7}{7}+...\ |z|<1
+\end{equation}
+sillä nämä sarjat suppenevat nopeammin, niistä on helpompi muodostaa tarkkoja Pad\'e-approksimaatioita ja niistä on helppoja muunnoskaavoja toisiinsa ja logaritmifunktioon. Asetetaan erityisesti
+\begin{equation}
+\psi(z)=1+\frac{1}{3}z+\frac{1}{5}z^2+\frac{1}{7}z^3+\frac{1}{9}z^4
+\approx\frac{\mathrm{arctanh}\sqrt{z}}{\sqrt{z}}
+\end{equation}
+jolloin $\mathrm{arctanh}(z)\approx z\psi(z^2)$. Funktiolle $\psi$ löytyy helposti Pad\'e-approksimaatio kaavan (\ref{pade224}) avulla, jolloin saadaan siis sievennysten ja manipulaatioiden jälkeen
+\begin{equation}
+\mathrm{arctanh}(z)\approx z\left(\frac{945-735z^2+64z^4}{945-1050z^2+225z^4}\right)
+\label{padearctanh}
+\end{equation}
+ja samaten kaavaa
+\begin{equation}
+\mathrm{arctanh}(z)=-\hat\imath\arctan(\hat\imath z)
+\label{arctanharctan}
+\end{equation}
+sopivasti soveltaen:
+\begin{equation}
+\arctan(z)\approx z\left(\frac{945+735z^2+64z^4}{945+1050z^2+225z^4}\right).
+\label{padearctan}
+\end{equation}
+Pätee myös
+\begin{equation}
+\ln(z)=2\,\mathrm{arctanh}\left(\frac{z-1}{z+1}\right)
+\label{lnarctanh}
+\end{equation}
+joten logaritmillekin saadaan hyvä approksimaatio. Kokeellisesti (Maple\cite{maple}) voidaan mm. havaita kaavojen (\ref{padearctanh}) ja (\ref{lnarctanh}) olevan 8 desimaalia tarkka kun $z\in(0.6,1.8)$. Kun vielä vastaavasti tehokas neliöjuurenottomenetelmä \ref{ahm} on tunnettu, niin logaritmit voidaan tarvittaessa ottaa ainoastaan hyvin lähellä $1$:tä sijaitsevalta alueelta (ja arkusfunktiot lähellä nollaa sijaitsevalta). Käsitellään tämä arkustangentin suhteen:
+
+Kaksinkertaisen kulman tangentin kaava on
+\begin{equation}
+\tan(2\theta)=\frac{2\tan\theta}{1-\tan^2\theta}
+\end{equation}
+mistä voidaan johtaa 2. asteen yhtälön ratkaisulla puolikkaan kulman tangentin kaava
+\begin{equation}
+\tan\left(\frac{\theta}{2}\right)=\frac{\tan\theta}{\sqrt{1+\tan^2\theta}+1}
+\end{equation}
+joka pätee (ainakin) kulmavälillä $\theta\in[0,\pi/4]$. Kirjoittamalla $\theta=\arctan z$, saadaan edelleen
+\begin{equation}
+\tan\left(\frac{\arctan z}{2}\right)=\frac{z}{\sqrt{1+z^2}+1}
+\end{equation}
+ja edelleen
+\begin{equation}
+\arctan(z)=2\arctan\left(\frac{z}{\sqrt{1+z^2}+1}\right).
+\label{arctanpuolitus}
+\end{equation}
+Kaavoihin (\ref{padearctan}) ja (\ref{arctanpuolitus}) voidaan perustaa mm. kuvan \ref{kulmanpuolituspii} mukainen tehokas algoritmi $\pi$:n laskemiseksi, joskaan tämä ei enää nykyään ole yleisessä käytössä johtuen jäljempänä käsiteltävän aritmeettis-geometrisen keskiarvoistamisen paremmuudesta.
+
+Vastaavasti pätee kaavan (\ref{arctanharctan}) nojalla
+\begin{equation}
+\mathrm{arctanh}(z)=2\ \mathrm{arctanh}\,\left(\frac{z}{\sqrt{1-z^2}+1}\right)
+\label{arctanhpuolitus}
+\end{equation}
+mikä on logaritmin laskemisen kannalta hyödyllisempi muoto. 
+ 
+Kulmanpuolituksella on tällaisessa mielessä merkitystä korkeintaan $\ln(2)$:n laskemisen kannalta, koska tätä ilmeisesti tarvitaan erikseen kaavassa (\ref{logagm}). \texttt{mpfr} \cite{mpfr} käyttää tästäkin huolimatta ennemminkin sarjaa
+\begin{equation}
+\ln(2)=\frac{3}{4}\sum_{n=0}^\infty\frac{(-1)^n\,(n!)^2}{2^n\,(2n-1)!}
+\label{mpfr_ln2}
+\end{equation}
+mutta on kyseenalaista, onko näin yksinkertainen menetelmä tässä paras mahdollinen.
+\begin{figure}
+\begin{verbatim}
+#include <stdio.h>
+#include <math.h>
+
+double pade_arctan(double z) {
+        double t1,t2,t3;
+        t1=z*z;
+        t2=945.0+t1*(735.0+64.0*t1);
+        t3=945.0+t1*(1050.0+225.0*t1);
+        return z*t2/t3;
+}
+
+double half_angle(double z) {
+        return z/(sqrt(1.0+z*z)+1.0);
+}
+
+int main(int argc, char *argv[]) {
+        int i,n;
+        double tangent=1.0,value;
+        printf("Montako kulmanpuolitusta? ");
+        scanf("%d",&n);
+        for(i=0;i<n;i++) {
+                tangent=half_angle(tangent);
+        }
+        value=pade_arctan(tangent);
+        for(i=0;i<(n+2);i++) {
+                value+=value;
+        }
+        printf("Pii on noin %17.15lf\n",value);
+        return 0;
+}
+\end{verbatim}
+\caption{Tämä ohjelma laskee $\pi$:n arvoa sopivalla kulmanpuolituksen ja $R_{2,2}$-Pad\'e-approksimaation yhdistelmällä. Jo 4 kierroksen valitseminen tuottaa 14 oikeaa desimaalia.}
+\label{kulmanpuolituspii}
+\end{figure}
+
+Funktiot $\arcsin$ ja $\arccos$ saadaan vastaavasti lausuttua funktion $\arctan$ avulla seuraavasti:
+\begin{eqnarray}
+\arcsin(z) & = & \arctan\left(\frac{z}{\sqrt{1-z^2}}\right) \\
+\arccos(z) & = & \arctan\left(\frac{\sqrt{1-z^2}}{z}\right).
+\end{eqnarray}
+
+\subsection{Machin-tyyppiset kaavat}
+Arkustangentille pätee vähennyslaskukaava
+\begin{equation}
+\arctan(z_1)-\arctan(z_2)=\arctan\left(\frac{z_1-z_2}{1+z_1 z_2}\right)
+\end{equation}
+ks. esimerkiksi \cite{handbookmathematical}, s. 87. Tämä tarkoittaa sitä, että arkustangentti voidaan helposti hajauttaa useamman pienempiargumenttisen arkustangentin summaksi. Esimerkiksi (huomaa, että $\arctan(1)=\frac{\pi}{4}$)
+\begin{eqnarray}
+\pi & = & 4\,\arctan\left(\frac{1}{2}\right)+4\,\arctan\left(\frac{1}{3}\right) \nonumber\\
+& = & 8\,\arctan\left(\frac{1}{3}\right)+4\,\arctan\left(\frac{1}{7}\right) \nonumber\\
+& = & 12\,\arctan\left(\frac{1}{7}\right)+8\,\arctan\left(\frac{2}{11}\right).
+\label{machintyyppiset}
+\end{eqnarray}
+Kaavassa (\ref{machintyyppiset}) alimpana olevat sarjat ovat jo kohtuullisen nopeasti suppenevia.
+
+Logaritmia varten on tietysti taas $\mathrm{arctanh}(z)$ olennaisen tärkeä (ks. kaavaa (\ref{lnarctanh})). Tälle löytyy vieläkin paremmin kuin arkustangentille, hyviä kaavoja nopeasti suppenevien sarjakehitelmien muodostamiseen. Esimerkkeinä näistä säännöistä voisi mainita rationaaliargumenttien summan
+\begin{equation}
+\mathrm{arctanh}\left(\frac{p_1}{q_1}\right)+
+\mathrm{arctanh}\left(\frac{p_2}{q_2}\right)=
+\mathrm{arctanh}\left(\frac{p_1 q_2+p_2 q_1}{p_1 p_2+q_1 q_2}\right)
+\end{equation}
+ja tähän sijoittamalla saatavan/todistettavan erään monista \emph{dekompositiosäännöistä}
+\begin{equation}
+\mathrm{arctanh}\left(\frac{1}{k}\right)=
+\mathrm{arctanh}\left(\frac{1}{2k-1}\right)+
+\mathrm{arctanh}\left(\frac{1}{2k+1}\right).
+\label{dekompositiosaanto}
+\end{equation}
+Kaavan (\ref{dekompositiosaanto}) eräänä sovelluksena voidaan saada vaikkapa seuraava kehitelmä
+$\ln(2)$:lle:
+\begin{eqnarray}
+\ln(2) & = & 2\ \mathrm{arctanh}\left(\frac{1}{3}\right) \nonumber\\
+\mathrm{arctanh}\left(\frac{1}{3}\right) & = &
+\mathrm{arctanh}\left(\frac{1}{5}\right)+
+\mathrm{arctanh}\left(\frac{1}{7}\right) \nonumber\\
+\mathrm{arctanh}\left(\frac{1}{5}\right)-
+\mathrm{arctanh}\left(\frac{1}{7}\right) & = &
+\mathrm{arctanh}\left(\frac{1}{17}\right) \nonumber\\
+\mathrm{arctanh}\left(\frac{1}{7}\right) & = &
+\mathrm{arctanh}\left(\frac{1}{13}\right) +
+\mathrm{arctanh}\left(\frac{1}{15}\right) \nonumber\\
+\ln(2) & = & 4\,\mathrm{arctanh}\left(\frac{1}{13}\right)+
+4\,\mathrm{arctanh}\left(\frac{1}{15}\right)+ \nonumber\\
+& & 2\,\mathrm{arctanh}\left(\frac{1}{17}\right).
+\end{eqnarray}
+
+Bailey, Borwein ja Plouffe ovat artikkelissaan \cite{rapidcomputation} vieneet näitä kaavoja askeleen pidemmälle ja löytäneet ns. \emph{polylogaritmisten sarjojen teoriaa} tutkimalla sellaisia kehitelmiä $\pi$:lle, joista voidaan päätellä esim. tietyn kaukanakin kehitelmässä sijaitsevan bitin tai desimaalin arvo. Eräs heidän tärkeimmistä havainnoistaan oli, että
+\begin{equation}
+\pi=\sum_{k=0}^\infty \frac{1}{16^k}\left(
+\frac{4}{8k+1}-\frac{2}{8k+4}-\frac{1}{8k+5}-\frac{1}{8k+6}\right).
+\label{borweinpi}
+\end{equation}
+Kaava (\ref{borweinpi}) soveltuu hyvin $\pi$:n heksadesimaalisen kehitelmän numeroiden laskemiseen (ja samalla tietysti myös binaarisen kehitelmän bitteihin).
+
+Seuraava Dik T. Winter:in kirjoittama hieno ohjelma \cite{computedigitspi} laskee $\pi$:n 800-desimaalisen kehitelmän. Ohjelma alkuperäisessä muodossaan oli vain 160 merkin pituinen:
+\begin{verbatim}
+int a=10000,b,c=2800,d,e,f[2801],g;main(){for(;b-c;)f[b++]=a/5;
+for(;d=0,g=c*2;c-=14,printf("%.4d",e+d/a),e=d%a)for(b=c;d+=f[b]*a,
+f[b]=d%--g,d/=g--,--b;d*=b);}
+\end{verbatim}
+mutta valitettavasti sikäli virheellinen, että se ajoittain tuotti vääriä tuloksia. Huomasin syyksi
+\begin{itemize}
+\item[a)]
+\texttt{printf}-funktiota ei oltu esitelty
+\item[b)]
+ainakin muuttujat \texttt{b} ja \texttt{e}  olivat jääneet alustamatta (nolliksi). Ohjelma siis toimi satunnaisesti jos niiden varaamissa muistipaikoissa oli nollia, muuten ei.
+\end{itemize}
+Ohjelman korjattu versio, jossa on lisäksi tehokkuuden vuoksi siirretty globaalit muuttujat \texttt{main()}-funktion sisään (sijoitettavaksi rekistereihin), kuuluu seuraavasti:
+\begin{verbatim}
+#include <stdio.h>
+
+main() {
+
+int a=10000,b=0,c=2800,d=0,e=0,f[2801],g=0;
+        for(;b-c;)
+                f[b++]=a/5;
+                for(;d=0,g=c*2;c-=14,printf("%.4d",e+d/a),e=d%a)
+                        for(b=c;d+=f[b]*a,f[b]=d%--g,d/=g--,--b;d*=b);
+}
+\end{verbatim}
+
+\subsection{Aritmeettis-geometrinen keskiarvo, $\pi$ ja logaritmi}
+Lukujen $x$ ja $y$ välinen \emph{aritmeettis-geometrinen keskiarvo} $\mathrm{AGM}(x,y)$ määritellään seuraavasti: sijoitetaan $a_0=x$, $b_0=y$ ja iteroidaan kaavan
+\begin{equation}
+a_{k+1}=\frac{a_k+b_k}{2},\ b_{k+1}=\sqrt{a_k b_k}
+\label{agmiter}
+\end{equation}
+mukaan. Tällöin on
+\begin{equation}
+\lim_{k\to\infty}a_k=\lim_{k\to\infty}b_k=\mathrm{AGM}(x,y)=\mathrm{AGM}(a_k,b_k).
+\end{equation}
+Aritmeettis-geometrisella keskiarvolla on mm. seuraavanlainen yhteys elliptisten integraalien teoriaan:
+\begin{equation}
+AGM(x,y)=\frac{\pi}{2}\frac{1}{\int_{\theta=0}^{\pi/2}
+\left(x^2\cos^2\theta+y^2\sin^2\theta\right)^{-1/2}\,d\theta}
+\label{agmelliptic}
+\end{equation}
+ks. esim. \cite{elementselliptic}, §46 (the arithmetic-geometrico mean). Todistus, joka sivuutetaan tässä, perustuu siihen, että kaavassa (\ref{agmelliptic}) esiintyvä integraali on mahdollista muuntaa tavoilla, jossa $x$ ja $y$ korvautuvat sopivilla ag-keskiarvoistamista vastaavilla lausekkeilla (Landenin muunnos).
+
+Käyttäen hyväksi mm. tätä ja elliptiset integraalit toisiinsa ja $\pi$:hin kytkevää Legendren lausetta
+\footnote{
+\begin{equation}
+E'K+EK'-KK'=\pi/2
+\label{legendrenrelaatio}
+\end{equation}
+missä 
+\begin{eqnarray}
+K(k) & = & \int_{\theta=0}^{\pi/2}\left(1-k^2\sin^2\theta\right)^{-1/2}\,d\theta \nonumber\\
+E(k) & = & \int_{\theta=0}^{\pi/2}\left(1-k^2\sin^2\theta\right)^{1/2}\,d\theta \nonumber\\
+K'=K(k') & = & K(1-k^2) \nonumber\\
+E'=E(k') & = & E(1-k^2).
+\end{eqnarray}
+Todistus perustuu tämän Legendren relaation (\ref{legendrenrelaatio}) vasemman puolen derivoimiselle ja sen toteamisella, että kyseinen derivaatta on $=0$.}
+\cite{elementselliptic}, §44, \cite{handbookmathematical}, luku 17, saadaan $\pi$:lle seuraavanlainen \texttt{mpfr}:ssä \cite{mpfr} käytössä oleva kaava:
+\begin{equation}
+\pi=\frac{AGM\left(1,\frac{1}{\sqrt{2}}\right)^2}{\frac{1}{4}-\sum_{k=1}^\infty
+2^{k-1}\left(a_k^2-b_k^2\right)}
+\label{piagm}
+\end{equation}
+missä $a_k$:t ja $b_k$:t ovat peräisin kaavasta (\ref{agmiter}). Logaritmille on vastaavasti olemassa jälleen \texttt{mpfr}:ssä \cite{mpfr} käytössä oleva kaava
+\begin{equation}
+\ln(x)\approx\frac{\pi}{2}\frac{1}{AGM\left(1,\frac{4}{s}\right)}-m\ln(2)
+\label{logagm}
+\end{equation}
+missä $s=x\,2^m>2^{p/2}$ ja $p$ on haluttu bittitarkkuus.
+\footnote{$\ln(2)$ on tietysti laskettava jotenkin. Aiemmin esiteltiin \texttt{mpfr}:n \cite{mpfr} sitä varten käyttämä sarjamenetelmä (\ref{mpfr_ln2}) ja kulmanpuolitus (\ref{arctanhpuolitus}).}
+Kaava (\ref{logagm}) perustuu siihen, että elliptiset funktiot lähenevät asymptoottisesti trigonometrisia ja hyperbolisia funktioita tietyillä arvoilla ja vastaavasti elliptiset integraalit arkus- ja areafunktioita. Ks. esim. 
+\cite{handbookmathematical}, luku 17, erityisesti § 17.3.26.
+\footnote{Muunneltu versio tästä (modulin tilalla parametri $k^2$ ja ilmaistu A-S:n
+\cite{handbookmathematical} mukaan logaritmimuodossa) kuuluu
+\begin{equation}
+\lim_{k\to 1}\left(K(k)-\frac{1}{2}\ln
+\left(\frac{16}{1-k^2}\right)
+\right)=0.
+\end{equation}
+Todistus perustuu $K(k)$:n ja $\ln\left(\frac{1}{1-k^2}\right)$:n Taylorin sarjakehitelmiin (sivuutetaan).
+}
+
+\chapter{Lopuksi}
+
+\section{Yhteenveto}
+Tämä erikoistyö käsittelee sinänsä kapeaa numeriikan alaa keskittyen vain alkeisfunktioiden evaluoimiseen (vähäisenä poikkeuksena muutamat viittaukset elliptisiin funktioihin ja integraaleihin). Tämä on kuitenkin siinä mielessä tärkeä osa-alue, että heikkoudet näiden funktioiden evaluointimenetelmissä tietokoneen prosessoritasolla tai standardi-C-kirjastoissa johtavat monien muidenkin sovellusten hitauteen tai epätarkkuuteen.
+
+Asiaa johdatellaan ensin täysin perusteista - yhteen ja vähennyslaskun ilmaisemisesta loogisin operaatioin. Tämä on pohjana sille, miten nämä laskutoimitukset ovat helposti ja alkeellisesti evaluoitavissa mikroprosessoreissa. Tämän jälkeen esitellään lyhyesti liukuluvut tärkeänä reaalilukujen likimääräisen esittämisen tekniikkana. Polynomien evaluoimisesta Hornerin säännöllä on tehty kaksi tärkeää huomautusta, rekursion purkaminen vaihtamalla termien evaluointijärjestys, samoin kuin hajauttaminen rinnakkaislaskentaa varten.
+
+Kertolaskun osalta on ensin esitelty alkeellinen pitkän kertolaskualgoritmin tekniikka, joka on kuitenkin erittäin suositeltava pienen tarkkuuden liukuluvuilla ja kokonaisluvuilla. Tämän jälkeen on esitelty Toom-Cook-algoritmeja ja todettu hyvin tunnettujen Karatsuban ja Fourierin algoritmien olevan tosiasiassa Toom-Cook-algoritmien erikoistapauksia. Tämä teoria on tärkeässä asemassa suuren tarkkuuden (esim. tuhansia bittejä) käsittävien lukujen kertolaskuissa. Eräänä keskeisenä sovellusalueena suuren tarkkuuden tuloille on mm. kryptografia. Jakolaskun osalta on olennaisessa asemassa nopean kertolaskun ja inverssiä koskevan geometrisen sarjan hyväksikäyttö.
+
+Tämän jälkeen siirrytään rationaaliapproksimointiin ja esitellään tärkeä Pad\'e-approksimaatiotekniikka erikoispisteitä käsittävien funktioiden evaluoimiseksi. Tällöin usein päästään kiertämään monia Taylorin sarjojen huonon suppenemisen tai hajaantumisen ongelmia. 
+
+Neliöjuurenotossa on ''standardi'' Newtonin menetelmä käytännössä sivuutettu aritmeettis-harmonisen keskiarvoistamisen virhearvioita koskevien etujen vuoksi. Eksponenttifunktion osalta on lähdetty pääasiassa liikkeelle Taylorin sarjasta, mutta esitetty kaksi yleisessä käytössä olevaa parannusta koskien suppenemisen nopeuttamista ja liukulukujen vähennyslaskuongelman välttämistä. Samoilla linjoilla on esitelty trigonometrisistä funktioista esimerkkinä kosini.
+
+Logaritmien ja arkusfunktioiden, samoin kuin $\pi$:n osalta on aluksi esitelty yksinkertaisuuden vuoksi kulmanpuolitukseen ja Pad\'e-approksimaatioihin perustuva menetelmä. Tämä siksi, että näillä tekniikoilla päästään tavallisilla tarkkuusvaatimuksilla jo aivan tarpeeksi pitkälle. Machin-tyyppiset kaavat on esitelty lyhyesti ja tehty huomautus, että eräät niiden polylogaritmiset yleistykset tarjoavat mahdollisuuden logaritmien ja $\pi$:n haluttujen kehitelmänosien evaluoinnille. Lopuksi on esitelty luettelonomaisesti aritmeettis-geometrisen keskiarvoistamisen kaavat, koska nämä ovat nykyään suuren tarkkuuden liukulukusovelluksissa ''standardimenetelmiä''.
+
+\section{Tästä eteenpäin}
+Logaritmien ja $\pi$:n osalta oleva teoria on tilanpuutteen vuoksi jäänyt osittain pinnalliselle tarkastelulle. Tämä aihealue on sitäpaitsi nykyään runsaan tutkimuksen alla ja monet tämän aihepiirin edistysaskelista on otettu vasta 1900-luvun jälkipuoliskolla tai jopa 2000-luvun puolella. Erityisen merkillepantavaa on se, että monet mm. elliptisten funktioiden teoriaa koskevat kaavat ovat olleet tunnettuja 1700-luvulta asti, mutta niiden merkitys laskennan kannalta on ymmärretty paremmin vasta tietokoneiden kehityksen myötä. Tästä aihealueesta on myös paljon avoimena olevia kysymyksiä, mm. se, onko $\pi$:n ja logaritmien laskemiseksi yhtä tehokasta menetelmää kuin aritmeettis-geometrinen keskiarvoistaminen on, vähemmillä viittauksilla elliptisten funktioiden teoriaan. Samoin on olennainen kysymys, millä eri tavoin voidaan etukäteistietoa $\pi$:n tai tiettyjen logaritmien suuren tarkkuuden arvoista muiden logaritmien ja arkusfunktioiden arvojen laskemiseksi. Aritmeettis-geometrisen keskiarvoistamisen kaavastakin käy ilmi, kuinka on helpompi laskea $\pi$:n ja logaritmien välisiä suhteita kuin logaritmeja itsessään.
+
+\begin{thebibliography}{99}
+\bibitem{matlab}
+The MathWorks: \emph{MATLAB and SimuLink for Technical Computing},\\
+\texttt{http://www.mathworks.com/}
+\bibitem{maple}
+Maplesoft:\\
+\texttt{http://www.maplesoft.com/}
+\bibitem{yacas}
+Yet another computer algebra system:\\
+\texttt{http://yacas.sourceforge.net/}
+\bibitem{linuxprogrammersmanual}
+Linus Torvalds, Free Software Foundation etc.: \emph{Linux Programmer's Manual}
+(Teos on luettavissa Linux:in manuaalisivujen muodossa, lisäksi siitä on olemassa eri levitysversioiden toimittajien julkaisemia toisistaan sisällöltään poikkeavia painoksia.)
+\bibitem{c}
+Kernighan, Ritchie: \emph{The C programming language}\\
+Prentice Hall, 1988, 1978
+\bibitem{gcc}
+GNU Compiler Collection:\\
+\texttt{http://gcc.gnu.org/}
+\bibitem{fortran}
+Fortran: \texttt{http://www.fortran.com/}
+\bibitem{amd}
+Advanced Micro Devices (AMD): \emph{AMD64 Architecture Programmers Manual Volume 1: Application Programming} \\
+\texttt{http://www.amd.com/us-en/Processors/TechnicalResources/}
+\bibitem{ieee754}
+The ANSI/IEEE standard for floating point arithmetic (IEEE-754-1985),\\
+\texttt{http://www.psc.edu/general/software/packages/ieee/ieee.html}
+\bibitem{gmp}
+GNU GMP \\
+\texttt{http://www.gnu.org/software/gmp/}
+\bibitem{mpfr}
+The MPFR library \\
+\texttt{http://www.mpfr.org/} \\
+\texttt{http://www.mpfr.org/algo.html}
+\bibitem{fftw}
+FFTW (Fastest Fourier Transformation in the West) \\
+\texttt{http://www.fftw.org/}
+\bibitem{approksimaatioteoria}
+Timo Eirola, Harri Hakula: \emph{Approksimaatioteorian kurssi ja monisteet}
+http://math.tkk.fi/opetus/approx/
+\bibitem{toeplitz}
+Weisstein, Eric W. "Toeplitz Matrix." From MathWorld--A Wolfram Web Resource. \\
+http://mathworld.wolfram.com/ToeplitzMatrix.html
+\bibitem{lu}
+Weisstein, Eric W. "LU Decomposition." From MathWorld--A Wolfram Web Resource. \\ http://mathworld.wolfram.com/LUDecomposition.html 
+\bibitem{computedigitspi}
+How to compute digits of pi? \\
+\texttt{http://www.cs.uwaterloo.ca/\~{}alopez-o/math-faq/mathtext/node12.html}
+\bibitem{elementselliptic}
+N. I. Akhietzer: \emph{Elements of the Theory of Elliptic Functions} \\
+American Mathematical Society
+\bibitem{naturallogarithm}
+Wikipedia: \emph{Natural logarithm} \\
+\texttt{http://en.wikipedia.org/wiki/Natural\_logarithm}
+\bibitem{handbookmathematical}
+Abramowitz, Stegun: \emph{Handbook of Mathematical Functions} \\
+\texttt{http://www.math.sfu.ca/\~{}cbm/aands/frameindex.htm}
+\bibitem{rapidcomputation}
+Bailey, Borwein, Plouffe: \emph{On the rapid computation of various polylogarithmic constants} \\
+\texttt{http://www.lacim.uqam.ca/\~{}plouffe/articles/BaileyBorweinPlouffe.pdf}
+\end{thebibliography}
+\end{document}

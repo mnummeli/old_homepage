@@ -1,0 +1,342 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+  <HEAD>
+    <TITLE>Mikko Nummelinin Tcl/Tk-sivu</TITLE>
+    <META name="Author" content="Mikko Nummelin">
+    <META name="keywords" content="Mikko Nummelin, kotisivu, harrastukset, shakki, IT-ala, tietotekniikka, TclTk, Tcl, Tk">
+    <LINK href="../mikko.css" rel="stylesheet" type="text/css">
+  </HEAD>
+
+  <BODY>
+  <a href="index.html">Yl&ouml;s</a>
+  <HR/>
+  <H1>Mikko Nummelinin Tcl/Tk-sivu</H1>
+  <HR/>
+
+<TABLE>
+  <TR>
+  <TD>
+  <a href="http://www.tcl.tk/"><h4>Tcl/Tk</h4></a>
+    <a href="http://www.tcl.tk/"><IMG SRC="Tcl.png" HEIGHT="120"></a>
+  </a>
+  <TD>
+  &lt;- Linkki Tcl/Tk:n kansainv&auml;liselle sivulle.
+  </TR>
+</TABLE>
+
+<H2>Mist&auml; Tcl/Tk:n saa?</H2>
+Ks. <A href="http://www.tcl.tk/software/tcltk/8.5.html">
+t&auml;&auml;lt&auml;</A>.
+
+<A NAME="yleistcl">
+<H2>Yleist&auml; Tcl:st&auml;</H2>
+<P>
+Tcl on listapohjainen skriptikieli, jonka suurin merkitys on siin&auml;, ett&auml;
+grafiikkakirjasto <A href="#yleistk">Tk</A>
+on kirjoitettu ensinn&auml; sit&auml; tukemaan. Jokainen
+Tcl:n komento on <i>lista</i>, jossa ensimm&auml;isen&auml; on aina
+<i>k&auml;sky</i>, jota seuraavat argumentit. Esimerkki alkeellisesta
+Tcl-ohjelmasta:
+<pre>
+puts "Nimesi: "
+gets stdin nimi
+puts "Hei $nimi"
+</pre>
+Ohjelma voidaan tallentaa vaikka nimelle "hoi.tcl" ja ajaa k&auml;skyll&auml;
+<pre>
+$ tclsh ./hoi.tcl
+Nimesi:
+Mikko
+Hei Mikko
+</pre>
+Siin&auml; luetaan merkkijono standardista sis&auml;&auml;nmenosta
+(komentorivilt&auml;) ja sijoitetaan muuttujaan "nimi". Viimeisest&auml;
+<code>puts</code>-lauseesta on huomattava $-merkki, mik&auml; pyyt&auml;&auml;
+<i>laventamaan</i> muuttujan arvoonsa ja kaksinkertaiset lainausmerkit.
+Jos ohjelma olisi kirjoitettu virheellisesti muodossa:
+<pre>
+puts "Nimesi: "
+gets stdin nimi
+puts 'Hei $nimi'
+</pre>
+niin olisi seurannut virheilmoitus:
+<pre>
+Nimesi: 
+Mikko
+can not find channel named "'Hei"
+    while executing
+"puts 'Hei $nimi'"
+    (file "./hoi2.tcl" line 3)
+</pre>
+Yksinkertaisissa lainausmerkeiss&auml; olevaa ei nimitt&auml;in lavenneta eik&auml;
+yhdistet&auml;, joten sana "Hei" olisi tulkittu <code>puts</code>-k&auml;skyn
+1. argumentiksi (tiedostoon osoittavaksi muuttujaksi). Vastaavasti:
+<pre>
+puts "Nimesi: "
+gets stdin nimi
+puts {Hei $nimi}
+</pre>
+olisi tuottanut lopputulokseksi
+<pre>
+Nimesi: 
+Mikko
+Hei $nimi
+</pre>
+Aaltosulkeet tarkoittavat, ett&auml; yhdistet&auml;&auml;n yhdeksi parametriksi,
+muttei lavenneta mit&auml;&auml;n.
+</P>
+
+<P>
+Tarkastellaan seuraavaksi silmukkarutiineja ja laaditaan kertotaulu:
+<pre>
+for {set y 0} {$y<16} {incr y} {
+  for {set x 0} {$x<16} {incr x} {
+    set res [expr {$y*$x}]
+    set resstr [format "%4d" $res]
+    if {$x<15} {
+      puts -nonewline $resstr
+    } else {
+      puts $resstr
+    }
+  }
+}
+</pre>
+Silmukkarakenteiden lis&auml;ksi huomattavaa ovat hakasulkeet (laskee lausekkeen
+arvon), <code>expr</code> (matemaattisen lausekkeen evaluointi), <code>set</code>
+(muuttujaan sijoitus), ja <code>format</code> (C-tyylisen asemoinnin laatiminen
+ja sijoittaminen merkkijonoon). Hakasulkeiden ansiosta kaikkea ei olisi tarvinnut
+sijoittaa apumuuttujiin, vaan t&auml;llainenkin olisi ollut mahdollista:
+<pre>
+for {set y 0} {$y<16} {incr y} {
+  for {set x 0} {$x<16} {incr x} {
+    if {$x<15} {
+      puts -nonewline [format "%4d" [expr {$y*$x}]]
+    } else {
+      puts [format "%4d" [expr {$y*$x}]]
+    }
+  }
+}
+</pre>
+Monimutkaiset sis&auml;kk&auml;iset lausekkeet kuitenkin tekev&auml;t
+t&auml;ss&auml;, kuten muissakin kieliss&auml;, ohjelmista vaikeaselkoisia.
+V&auml;lt&auml; sellaista!
+</P>
+
+<P>
+Seuraava ohjelma k&auml;sittelee listoja laatimalla listan kyseisen hakemiston
+alihakemistoista ja tavanomaisista tiedostoista. On huomattava, ett&auml;
+jos vipua <code>-nocomplain</code> ei annettaisi, kaatuisi ohjelma virheeseen
+siin&auml; tavanomaisessa tapauksessa, ettei jommassakummassa listassa olisi
+yht&auml;&auml;n alkioita.
+<pre>
+set dirlist [glob -nocomplain -type d *]
+set filelist [glob -nocomplain -type f *]
+puts "Directories:"
+foreach dirname $dirlist {
+  puts $dirname
+}
+puts "Ordinary files:"
+foreach filename $filelist {
+  puts $filename
+}
+</pre>
+</P>
+
+<P>
+Seuraava rutiini m&auml;&auml;ritt&auml;&auml; uuden funktion ja
+hy&ouml;dynt&auml;&auml; rekursiota ja globaalia muuttujaa
+(n&auml;ihin viittaavat kohdat on <b>lihavoitu</b>):
+<pre>
+#!/usr/bin/tclsh
+
+<b>proc</b> dirtree {depth} {
+  <b>global</b> max_depth
+  if {$depth > $max_depth} {
+    return
+  }
+  set dirlist [glob -nocomplain -type d *]
+  foreach dirname $dirlist {
+    for {set i 0} {$i<$depth} {incr i} {
+      puts -nonewline "    "
+    }
+    puts $dirname
+    cd $dirname
+    <b>dirtree</b> [expr {$depth+1}]
+    cd ..
+  }
+}
+
+if {$argc>0} {
+  set max_depth [lindex $argv 0]
+} else {
+  set max_depth 4
+}
+
+dirtree 0
+</pre>
+tulostaen hakemistopuun halutulta syvyydelt&auml;, esim:
+<pre>
+$ tclsh dirtree.tcl 5
+...
+</pre>
+Oletussyvyys on 4. On huomattava my&ouml;s ensimm&auml;isell&auml; rivill&auml;
+esiintyv&auml; m&auml;&auml;rite <code>#!/usr/bin/tclsh</code>. Se tarkoittaa,
+ett&auml; jos t&auml;m&auml;n skriptin sis&auml;lt&auml;v&auml;lle tiedostolle
+annetaan Unix-j&auml;rjestelm&auml;ss&auml; attribuutti <code>x</code>, niin
+se voidaan ajaa ilman <code>tclsh</code>:n kutsua, s.o.
+<pre>
+$ chmod ug+x dirtree.tcl
+$ ./dirtree.tcl 5
+...
+</pre>
+</P>
+
+<P>
+Helppo tekstipohjainen kello-ohjelma voidaan kirjoittaa vaikkapa n&auml;in:
+<pre>
+while {1} {
+  set t [clock seconds]
+  puts -nonewline "[clock format $t -format "%Y-%m-%d %H:%M:%S"]\r"
+  flush stdout
+  after 100
+}
+</pre>
+</P>
+Koska tuloste on relevantti vain noin 1 sekunnin v&auml;lein, niin t&auml;ss&auml;
+on (naiivisti) laitettu 100 millisekunnin eli kymmenesosasekunnin
+viiv&auml;styskomento. Fiksumpi ohjelma voisi mitoittaa viiv&auml;styskomennon
+ensimm&auml;isen "nopealla sykkeell&auml;" havainnoidun sekunninvaihdoksen
+avulla, muttei t&auml;m&auml;k&auml;&auml;n "liian raskas" liene.
+
+<H3>Linkkej&auml; Tcl:st&auml;</H3>
+<UL>
+<LI><A href="http://www.tcl.tk/man/tcl8.5/tutorial/tcltutorial.html">
+Tcl:n tutorial-dokumentaatio</A>
+<LI><A href="http://www.tcl.tk/man/tcl8.5/TclCmd/contents.htm">
+Tcl:n komentojen ohjeet</A>
+</UL>
+
+<A NAME="yleistk">
+<H2>Yleist&auml; Tk:sta</H2>
+<P>
+Tk on Tcl:n p&auml;&auml;lle laadittu grafiikkakirjasto, joka on tarkoitettu laitteisto-
+ja k&auml;ytt&ouml;j&auml;rjestelm&auml;riippumattomaksi. Tk:n komennot siis
+kutsuvat tarvittavia Micro$oft Windows:in tai X Windows:in systeemikutsuja ilman,
+ett&auml; ohjelmoijan tarvitsee n&auml;it&auml; koskevista yksityiskohdista
+v&auml;litt&auml;&auml;. Tk-ohjelmat ajetaan <code>wish</code>
+(WIndowing SHell)-nimisell&auml; apuohjelmalla, joka tulee t&auml;ydellisten
+Tcl/Tk-pakettien mukana. Tk:lle on merkityst&auml; luotavien objektien, jotka voivat
+olla esim. ikkunoita, nappeja, tekstikentti&auml;, menuja, <i>polkunimet</i>. Kun
+<code>wish</code> alunperin k&auml;ynnistet&auml;&auml;n, niin se avaa automaattisesti
+yhden popup-ikkunan, jonka polkunimi on <code>.</code> (piste). T&auml;m&auml; on
+esimerkki er&auml;&auml;st&auml; yl&auml;tason (toplevel) ikkunasta.
+</P>
+<p>Seuraava on naiivi kahden nappulan esimerkki:
+<pre>
+package require Tk
+wm minsize . 300 100
+wm title . "Buttons example"
+pack [button .b -text "Greet" -command greet] -side left -padx 20 -pady 30
+pack [button .bb -text "Close" -command exit] -side right -padx 20 -pady 30
+
+proc greet {} {
+    puts "Hello world"
+}
+</pre>
+On erityisesti huomattava se, kuinka ensin varmistetaan paketin Tk lataaminen,
+t&auml;m&auml;n j&auml;lkeen annetaan ikkunointimanagerikomennot (minimikoko,
+nimike) ja lopuksi lis&auml;t&auml;n napit pakkausmanagerin <code>pack</code>
+avulla. Kummallekin napille annetaan my&ouml;s <i>toimintafunktio</i>,
+vasemmanpuoliselle itsem&auml;&auml;ritelty tulostusk&auml;sky, oikeanpuoleiselle
+sis&auml;&auml;nrakennettu poistumiskomento. Ajamalla yll&auml;oleva ohjelma
+k&auml;skyll&auml;
+<pre>
+$ wish ./buttonexample.tcl
+</pre>
+saadaan seuraavanlainen 'sovelma':</p>
+<p><img src="buttonexample.png"></p>
+
+<p>Esitell&auml;&auml;n seuraavaksi viel&auml; malliesimerkki graafisesta
+k&auml;ytt&ouml;liittym&auml;st&auml;. Niiden laatiminen on yht&auml;aikaa helppoa
+ja vaikeata, selvit&auml;&auml;n v&auml;hin k&auml;skyin, mutta on esimerkiksi
+ty&ouml;l&auml;st&auml; selvitt&auml;&auml; itselleen, miten eri kohdalla
+'polussa' olevat graafiset komponentit asetetaan mukaan 'sovelmaan':
+<pre>
+package require Tk;
+
+wm title . "Menu example"
+
+. configure -menu [menu .m -tearoff false]
+
+menu .m.filemenu -tearoff false
+menu .m.editmenu -tearoff false
+menu .m.aboutmenu -tearoff false
+
+.m add cascade -menu .m.filemenu -label File
+.m add cascade -menu .m.editmenu -label Edit
+.m add cascade -menu .m.aboutmenu -label About
+
+.m.filemenu add command -label "New" -command "newFile"
+.m.filemenu add command -label "Open" -command "openFile"
+.m.filemenu add command -label "Exit" -command exit
+
+.m.editmenu add command -label "Undo" -command "undoEdit"
+
+.m.aboutmenu add command -label "About" -command "about"
+
+canvas .c -height 200 -width 200 -bg green
+.c create line 10 10 190 190 -fill red
+.c create line 10 190 190 10
+.c create oval 20 20 180 180
+pack .c
+
+proc newFile {} {
+    puts "New File"
+}
+
+proc openFile {} {
+    puts "Open File"
+}
+
+proc undoEdit {} {
+    puts "Undo editing."
+}
+
+proc about {} {
+    if {[winfo exists .aboutwindow]} {
+        puts "'About'-window already exists"
+    } else {
+        toplevel .aboutwindow
+        wm title .aboutwindow "About"
+        label .aboutwindow.about -text "Menu example - Mikko Nummelin, 2008"
+        pack .aboutwindow.about -side top -padx 5 -pady 5
+        pack [button .aboutwindow.b -text "Close" -command "closeAbout"] \
+-side bottom -padx 5 -pady 5
+    }
+}
+
+proc closeAbout {} {
+    destroy .aboutwindow
+}
+</pre>
+Jonkin verran t&auml;ss&auml; on mukana pelkki&auml; 'stubeja', joihin voi keksi&auml;
+fiksumpia toimintoja. Lis&auml;ksi on malliesimerkki piirt&auml;miskomennoista ja
+v&auml;reist&auml;. Ajettaessa t&auml;m&auml; esimerkki vaikkapa komennolla:
+<pre>
+$ wish ./menuexample.tcl
+</pre>
+havaitaan, ett&auml; sovelma n&auml;ytt&auml;&auml; t&auml;lt&auml;:
+<p>
+<img src="menuexample.png">
+</p>
+Kannattaa kokeilla my&ouml;s, miten menut toimivat k&auml;yt&auml;nn&ouml;ss&auml;.
+</p>
+
+<H3>Linkkej&auml; Tk:sta</H3>
+<UL>
+<LI><A href="http://www.tkdocs.com/">Tk:n tutorial-dokumentaatio</A>
+<LI><A href="http://www.tcl.tk/man/tcl8.5/TkCmd/contents.htm">Tk:n komentojen ohjeet</A>
+</UL>
+
+</BODY>
+</HTML>

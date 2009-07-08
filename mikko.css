@@ -1,0 +1,48 @@
+/* HTML 4.0-määrittelystä kopioitu tyylitiedostopohja
+ * Mikko Nummelin, 2008
+ */
+
+body {
+	background-color : #dfefff;
+	background-image : url('images/nauha.jpg');
+	background-repeat : repeat-y;
+	background-position : left;
+	margin-left : 50px;
+	font-family: "Times New Roman", serif;
+	font-size: 10pt;
+}
+
+span.tools {
+	background-color : #ff7f7f;
+}
+
+img.bordered {
+	border: 0.3cm;
+}
+
+img.padded {
+	padding: 0.5cm;
+}
+
+h1 {
+	color : blue;
+}
+
+h2 {
+	color : blue;
+}
+
+h3 {
+	color : blue;
+}
+
+code {
+    color: maroon;
+}
+
+pre {
+	padding : 2mm;
+	background-color : silver;
+	color : black;
+	font-size: 8pt
+}

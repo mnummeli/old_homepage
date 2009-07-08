@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+  <HEAD>
+    <TITLE>Java, sovelmat, J2EE ja tietokannat</TITLE>
+    <META name="Author" content="Mikko Nummelin">
+    <META name="keywords" content="Mikko Nummelin, kotisivu, harrastukset, IT-ala,
+	tietotekniikka, Java, API">
+    <LINK href="../../mikko.css" rel="stylesheet" type="text/css">
+  </HEAD>
+
+  <BODY>
+  <a href="../index.html">Yl&ouml;s</a>
+  <HR/>
+  <H1>Java, sovelmat, J2EE, tietokannat</H1>
+  <HR/>
+<h2>Yleist&auml;</h2>
+Java (TM) on <a href="http://www.sun.com">Sun Microsystems</a>:in C++:n pohjalta laatima
+oliopohjainen ohjelmointikieli. Sen tyypillisin k&auml;ytt&ouml;tapa on k&auml;&auml;nt&auml;minen
+bytecode-nimiseksi tulkattavaksi v&auml;likieleksi, jota voidaan k&auml;ytt&auml;&auml; verkkosovellusten
+tai tavanomaisten ikkunointisovellusten osana. Java-kielelle on nyky&auml;&auml;n my&ouml;s
+sellaisia k&auml;&auml;nt&auml;ji&auml;, joilla saadaan eri arkkitehtuurien konekielisi&auml; binaareja,
+mutta n&auml;m&auml; ovat k&auml;yt&auml;nn&ouml;ss&auml; harvinaisia ja toiminnallisuudeltaan rajoitettuja.
+L&auml;hes kaikissa Java-ohjelmissa on ideana, ett&auml; ohjelma koostetaan yhdest&auml; tai useammasta
+luokasta (<code>class</code>), joista yhdess&auml; on <code>main</code>-funktio.
+
+<HR/>
+
+<h2>Esimerkki Java-sovelluksesta</h2>
+Seuraava on l&auml;hes klassinen tervehdyssovellus, mutta siin&auml; on kuitenkin esitelty tiettyj&auml;
+ikkunointitekniikoita. Alussa luodaan kysymysdialogi nimen kysymist&auml; varten ja jo valmiiksi
+piilotettuna <i>singleton</i>-instanssi vastausdialogia. Kun nimi sitten sy&ouml;tet&auml;&auml;n
+kysymyskentt&auml;&auml;n ja painetaan ENTER:i&auml;, niin vastausdialogi muokataan sopivaksi ja
+n&auml;ytet&auml;&auml;n ruudulla. Huomaa, kuinka erilaisia toimintoja varten, kuten sulkemista tai
+tekstikent&auml;n ENTER:in painallusta varten on luotu sis&auml;isi&auml; luokkia ja
+tapahtumainkuuntelijoita! Huomaa my&ouml;s minimaalinen valikkopalkki, joka on my&ouml;s ymp&auml;tty
+t&auml;h&auml;n esimerkkiin, sill&auml; valikoitahan k&auml;ytt&auml;v&auml;t melkein kaikki nykyaikaiset ohjelmat.
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class Hoi extends JFrame {
+	private JMenuItem sulkemisVaihtoehto=new JMenuItem("Sulje");
+	private JMenu lista=new JMenu("Toiminto");
+	private JMenuBar palkki=new JMenuBar();
+	private JPanel tausta=new JPanel(new BorderLayout());
+	private JLabel kysymys=new JLabel("Mik&auml; sinun nimesi on? ");
+	private JTextField nimi=new JTextField(20);
+	private Tervehdys tervehdys=null;
+
+	public Hoi() {
+		this.setTitle("Tervehdyssovelma - Mikko Nummelin, 2008");
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+		sulkemisVaihtoehto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		lista.add(sulkemisVaihtoehto);
+		palkki.add(lista);
+		this.setJMenuBar(palkki);
+		this.add(tausta);
+		tausta.add(kysymys,BorderLayout.WEST);
+		nimi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tervehdys=Tervehdys.getInstance();
+				tervehdys.tervehdysTekstiKentta.
+					setText("Hei "+nimi.getText()+".");
+				tervehdys.pack();
+				tervehdys.setVisible(true);
+			}
+		});
+		tausta.add(nimi,BorderLayout.EAST);
+		this.pack();
+		this.setVisible(true);
+	}
+
+	public static void main(String[] args) {
+		new Hoi();
+	}
+}
+
+class Tervehdys extends JFrame {
+	public static Tervehdys ainoaInstanssi=null;
+	public JLabel tervehdysTekstiKentta;
+
+	private Tervehdys() {
+		tervehdysTekstiKentta=new JLabel();
+		this.add(tervehdysTekstiKentta);
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				ainoaInstanssi.setVisible(false);
+			}
+		});
+	}
+
+	public static Tervehdys getInstance() {
+		if(Tervehdys.ainoaInstanssi==null) {
+			ainoaInstanssi=new Tervehdys();
+		}
+		return Tervehdys.ainoaInstanssi;
+	}
+}
+</pre>
+Oletetaan, ett&auml; t&auml;m&auml; ohjelma on talletettu nimell&auml; <code>Hoi.java</code>. T&auml;ll&ouml;in
+se voidaan k&auml;&auml;nt&auml;&auml; ja ajaa k&auml;skyill&auml;
+<pre>
+$ javac Hoi.java
+$ java Hoi
+</pre>
+<p>Sen tulostamat ikkunat n&auml;ytt&auml;v&auml;t suunnilleen seuraavanlaisilta:</p>
+<img src="holmolainen1.png"/>
+<img src="holmolainen2.png"/>
+<p>Itse ohjelma on saatavissa valmiina l&auml;hdekoodina <a href="Hoi.java">t&auml;st&auml;</a>.</p>
+
+<HR/>
+
+<h2>Apache <code>ant</code> ja arkistopaketin <code>*.jar</code> koostaminen</h2>
+
+<p>V&auml;h&auml;&auml;k&auml;&auml;n isommissa Java-projekteissa tulee helposti tarve koodin yksinkertaiseen
+k&auml;&auml;nt&auml;miseen ja sen paketoimiseen helposti ajettavaksi paketiksi joko komentorivilt&auml;
+tai <a href="http://java.sun.com/javase/technologies/desktop/javawebstart/index.jsp">
+Java Web Start</a>:illa. T&auml;ll&ouml;in kannattaa v&auml;hint&auml;&auml;nkin vakavasti harkita
+projektihakemiston kunnollista organisointia ja <a href="http://ant.apache.org/">
+Apache Ant</a>-k&auml;&auml;nn&ouml;sty&ouml;kalun k&auml;ytt&auml;mist&auml;. Suosittu hakemistorakenne on seuraavanlainen:
+</p>
+<pre>
+.
+|-- build.xml
+|-- build/
+|-- dist/
+`-- src/
+    |-- manifest.txt
+    `-- sovelma/
+        `-- *.java
+</pre>
+<p>N&auml;ist&auml; <code>build/</code> ja <code>dist/</code>-hakemistoja ei luoda valmiiksi
+rakenteeseen vaan ne luodaan aina erikseen ant:in alustusteht&auml;v&auml;ss&auml;.
+Ant nimitt&auml;in toimii siten, ett&auml; se lukee <code>build.xml</code>-nimisen
+XML-tiedoston ja suorittaa sen perusteella k&auml;&auml;nn&ouml;s ym. toimintoja. Mainittujen
+hakemistojen lis&auml;ksi saattaa paketissa olla my&ouml;s <code>lib/</code>-hakemisto
+ulkopuolisten toimittamia paketteja, kuten kuvank&auml;sittelij&ouml;it&auml; tai
+tietokanta-ajureita varten. Esimerkki <a href="build_sample.xml">build.xml</a>,
+joka tarvitsee tuekseen seuraavanlaisen
+<a href="manifest_sample.txt">manifest.txt</a>:n, koska muuten ohjelmapaketin
+ajamiseen tarkoitettu k&auml;sky
+<pre>
+$ java -jar dist/projekti&lt;versio&gt;.jar
+</pre>
+ei toimi. Ohjelman k&auml;&auml;nn&ouml;s ja paketointi suoritetaan seuraavin k&auml;skyin:
+<pre>
+$ ant clean
+$ ant dist
+</pre>
+Ensinmainittu k&auml;sky puhdistaa hakemistopuun, se ei kaikissa tapauksissa ole v&auml;ltt&auml;m&auml;t&ouml;n,
+mutta ainakin ennen isojen projektien tuotantoonviemist&auml;, eritt&auml;in suositeltava.
+</p>
+<HR/>
+
+<h2>Linkkej&auml;</h2>
+  <UL>
+    <LI><a href="http://java.sun.com/">Sun: Java Technology</a></LI>
+    <LI><a href="http://java.sun.com/javase/6/docs/api/">Sun: Java SE 6 API</a></LI>
+    <LI><a href="http://ant.apache.org/">Apache Ant</a></LI>
+    <LI><a href="http://java.sun.com/javaee/">J2EE, Java Enterprise Edition</a>
+<p>T&auml;m&auml; on todenn&auml;k&ouml;isesti kirjoitushetkell&auml; 2008 t&auml;rkein liikemaailmassa k&auml;ytetty
+Java-teknologian kokoelma. J2EE tarkoittaa karkeasti ottaen standardin Java-teknologian
+(J2SE, johon kuuluvat mm. Java-k&auml;&auml;nt&auml;j&auml;, standardikirjastot ja virtuaalikone) sek&auml;
+kehittyneiden verkko- ja tietokantateknologioiden muodostamaa yhteist&auml; tuoteperhett&auml;.
+Tyypillinen kaupallisen k&auml;yt&ouml;n sovellus koostuu <i>sovelluspalvelimesta</i> (esimerkiksi
+Glassfish, Tomcat tai BEA Weblogic), joka tarjoaa k&auml;ytt&auml;j&auml;lle n&auml;ht&auml;v&auml;ksi verkkoliittym&auml;n,
+<i>tietoa ja tietojenk&auml;sittely&auml; k&auml;sitt&auml;vist&auml; Java-luokista</i>
+(esimerkiksi Enterprise Java Beans) ja <i>tietokannasta</i> (esimerkiksi Oracle tai MySQL).
+Sovelluspalvelimen verkkosivut voivat olla esimerkiksi puhdasta HTML:&auml;&auml; (harvinaista),
+Javalla tehtyj&auml; palvelinosia (servlets) tai jotakin muuta merkint&auml;kielt&auml;, esim. JSP:t&auml;
+(Java Servlet Pages). Tarkempia tietoja varten ks. yll&auml;mainitun sivun 'Download'-osiota.
+</p>
+    </LI>
+    <LI><a href="http://www.hibernate.org">Hibernate</a>
+<p>T&auml;m&auml; on tietokantakenttien ja Java-luokkien sis&auml;lt&auml;mien muuttujien vastaavuuksien
+merkint&auml;&auml;n kehitetty ty&ouml;kalu, joka sis&auml;lt&auml;&auml; my&ouml;s muitakin tietokantojen k&auml;sittelyominaisuuksia.
+Se on tarkoitettu v&auml;hent&auml;m&auml;&auml;n monimutkaisten tietokantakyselyiden tarvetta.</p></LI>
+    <LI><a href="http://www.mysql.com">MySQL - tietokantapalvelin</a>
+<p>Er&auml;s suosituimmista tietokannoista. Kannattaa lukea sivulta l&ouml;ytyv&auml; manuaali, josta
+oppii esimerkiksi t&auml;rke&auml;&auml; SQL-tietokantakyselykielt&auml;.</p></LI>
+    <LI><a href="https://glassfish.dev.java.net/">Glassfish - Open Source Application Server</a>
+<p>T&auml;m&auml; on t&auml;rke&auml; sovelluspalvelin. Sit&auml; k&auml;ytet&auml;&auml;n J2EE-teknologialla tehtyjen verkkosovelmien,
+esimerkiksi <code>*.war</code>-tyyppisten verkkosivuja ja Java-luokkia k&auml;sitt&auml;vien pakettien
+n&auml;ytt&auml;miseen k&auml;ytt&auml;j&auml;n selaimella. T&auml;ss&auml;, kuten muissakin sovelluspalvelimissa, on olennaisena
+osana yll&auml;pit&auml;j&auml;n konsoli (administration console), jossa voidaan m&auml;&auml;ritt&auml;&auml; k&auml;ytt&auml;jien oikeuksia
+ja verkkosivujen n&auml;kymisi&auml; tarkemmin.
+</p>
+    </LI>
+  </UL>
+<HR/>
+  </BODY>
+</HTML>

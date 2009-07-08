@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>J2EE - Java Enterprise edition</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF8"/>
+		<meta name="Author" content="Mikko Nummelin"/>
+		<meta name="keywords" content="Mikko Nummelin, kotisivu, harrastukset, IT-ala, tietotekniikka, Java, API"/>
+		<link href="../../mikko.css" rel="stylesheet" type="text/css">
+		</head>
+
+	<body>
+		<h1>J2EE - Java Enterprise edition</h1>
+
+		<h2>Yleistä</h2>
+		<p>Tämän sivun tarkoituksena on tarjota alkeellinen esimerkki siitä, kuinka Java-ohjelmien ja verkkosivujen kokonaisuus ladataan sovelluspalvelimelle.</p>
+
+		<h2>Ympäristön pystyttäminen</h2>
+		<p>Koska tässä esimerkissä ei käytetä tietokantaa, riittää pelkkä sovelluspalvelin. Valitaan sovelluspalvelimeksi
+		<ul><li><a href="http://tomcat.apache.org">Apache Tomcat</a></li></ul>
+		Ladataan sieltä uusimman version (kirjoitushetkellä 6.0.18) zip-paketti ja puretaan se kotihakemiston alle tehtyyn hakemistoon (esim. "Application servers"):
+		<pre>$ unzip apache-tomcat-6.0.18.zip</pre>
+		Tämän jälkeen varmistetaan, ettei mikään muu sovelluspalvelin ole päällä menemällä osoitteeseen <a href="http://localhost:8080/">http://localhost:8080/</a> ja jos sieltä tulee vastaukseksi virhe, niin kyseinen portti on ilmeisesti vapaa. Käynnistetään Tomcat:
+		<pre>$ cd apache-tomcat-6.0.18/bin<br/>$ chmod 755 *.sh<br/>$ ./startup.sh</pre>
+		jolloin ruudulla pitäisi lukea suunnilleen:
+		<pre>Using CATALINA_BASE: ...<br/>Using CATALINA_HOME:<br/>Using CATALINA_TMPDIR: ...<br/>Using JRE_HOME: ...</pre>
+		Jos näin ei tapahdu, on todennäköisenä syynä se, ettei Java Development Kit:iä (Javan kehitysympäristö) tai Java Runtime Environment:iä (Javan ajoympäristö) ole oikein asennettu. Nämä on mahdollista ladata ja asentaa <a href="http://java.sun.com/">Sun Microsystems:in sivulta</a>. Jos Tomcat sitävastoin on käynnistynyt normaalisti, niin menemällä nyt uudestaan osoitteeseen <a href="http://localhost:8080/">http://localhost:8080/</a>, pitäisi näkyviin tulla Apache Tomcat:in oletussivu. Tarkastetaan edelleen, että palvelimen sulkeminen onnistuu normaalisti, eli ajamalla
+		<pre>$ ./shutdown.sh</pre>
+		pitäisi Tomcatin sivun lakata näkymästä kun sille yrittää mennä uudelleen.
+		</p>
+
+		<h2>Tomcatin käyttö</h2>
+		<p>Kun Tomcatin käynnistää uudelleen, löytyy sen sivulta itsessään jo runsaasti ohjeita palvelimen käyttöön. Erityisen suositeltavaa on mennä ensiksi <a href="http://localhost:8080/examples/servlets/index.html">tälle paikalliselle sivulle</a> ja klikata sen esimerkit läpi. Hyötynä tästä on se, että omaa sovellusta varten löytyy helposti "pohjakoodi".</p>
+	</body>
+</html>

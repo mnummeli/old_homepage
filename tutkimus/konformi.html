@@ -1,0 +1,452 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+  <HEAD>
+    <TITLE>Mikko Nummelin - Numeeriset konformikuvaukset - yleist&auml;</TITLE>
+    <META name="Author" content="Mikko Nummelin">
+    <META name="keywords" content="Mikko Nummelin, kotisivu, numeerinen laskenta,
+    Lindenmeyer, konformikuvaukset, elliptiset integraalit, diplomity&ouml;,
+    conformal mapping, oskulaatioalgoritmit, MATLAB, Octave, Forge, C, C++,
+    TeX, LaTeX, esitelm&auml;t">
+    <LINK href="../mikko.css" rel="stylesheet" type="text/css">
+  </HEAD>
+  <BODY>
+
+  <a href="index.html">Yl&ouml;s</a>
+  <hr/>
+  <H1>Numeeriset konformikuvaukset</H1>
+  
+  <hr/>
+  <h2>Mit&auml; ovat konformikuvaukset?</h2>
+  Konformikuvaukset ovat muotoa s&auml;ilytt&auml;vi&auml; kuvauksia.
+  Kompleksianalyysissa kyseess&auml; ovat kuvaukset, joissa
+  derivaatta on &auml;&auml;rellinen eik&auml; h&auml;vi&auml;.
+  
+  <hr/>
+  <h2>Nelikulmion moduli</h2>
+  <p>Nelikulmion moduli eli venym&auml;kerroin on keskeinen numeerinen
+  suure konformikuvauksissa. Sovitaan ensin, ett&auml; yleistetty
+  nelikulmio on yhdesti yhten&auml;inen alue, jonka reunalta on
+  m&auml;&auml;ritelty vastap&auml;iv&auml;&auml;n luettuna
+  nelj&auml; reunapistett&auml;. Jos t&auml;m&auml; nelikulmio
+  kuvataan konformisesti suorakaiteeksi siten, ett&auml; mainitut
+  reunapisteet kuvautuvat suorakaiteen kulmiksi, niin suorakaiteen
+  korkeuden ja leveyden suhde on nelikulmion moduli. Nelikulmion
+  modulia k&auml;ytet&auml;&auml;n usein <i>konformikuvausten laadun
+  mittaamisessa</i>. T&auml;ll&ouml;in alkuper&auml;inen nelikulmion
+  moduli on jollakin teoreettisella tavalla tunnettu ja numeerisesti
+  laskettua nelikulmion modulia verrataan siihen.</p>
+
+  <img src="nelikulmionmoduli.jpg"/>
+
+  <p>HUOM: T&auml;m&auml; kuva ei ole skaalassa!</p>
+
+  <hr/>
+  <h2>Mit&auml; menetelmi&auml; konformikuvausten konstruoimiseen on?</h2>
+
+    <h3>Perustapaukset</h3>
+      Konformikuvausten perustapauksia ovat ensimm&auml;isen asteen kuvaus,
+      eli muotoa w(z)=az+b, miss&auml; a ja b ovat kompleksilukuja, tyyppinen
+      kuvaus, M&ouml;bius-kuvaus ja potenssifunktio.
+      <h4>Lineaarikuvaus</h4>
+      Ensimm&auml;isen asteen
+      kuvaus s&auml;ilytt&auml;&auml; kaikki kuviot saman muotoisina, eli
+      vastaa ainoastaan siirtoa, kiertoa ja skaalausta. Ensimm&auml;isen asteen
+      kuvaukset ovat konformisia koko kompleksitasossa.
+      <h4>M&ouml;bius-kuvaus</h4>
+      <p>
+      M&ouml;bius-kuvauksilla tarkoitetaan muotoa w(z)=(az+b)/(cz+d) olevia
+      kuvauksia, joilta edellytet&auml;&auml;n lis&auml;ksi determinantin
+      h&auml;vi&auml;m&auml;tt&ouml;myytt&auml;, eli ad-bc &ne; 0.
+      N&auml;it&auml; sanotaan my&ouml;s <i>lineaarisiksi fraktionaalisiksi
+      kuvauksiksi</i> tai R<sub>1,1</sub>-kuvauksiksi. M&ouml;bius-kuvaukset kuvaavat
+      suorat suorat ja ympyr&auml;nkaaret suoriksi ja ympyr&auml;nkaariksi ja
+      ovat konformisia kaikkialla muualla paitsi <i>navassa</i>, joka sijaitsee
+      pisteess&auml; z=-d/c.
+      </p>
+      <p>
+      M&ouml;bius-kuvausten er&auml;it&auml;
+      erityistapauksia ovat <i>Cayleyn muunnokset</i>, jotka
+      kuvaavat yksikk&ouml;kiekon D(0;1)={z:|z|&lt;1} joksikin standardiksi puolitasoksi
+      tai toisin p&auml;in. Esimerkiksi w(z)=(1+z)/(1-z) kuvaa vasemman puolitason
+      yksikk&ouml;kiekoksi. Toinen t&auml;rke&auml; M&ouml;bius-kuvausten luokka on
+      <i>yksikk&ouml;kiekon automorfismit</i>. N&auml;m&auml; ovat aina muotoa
+      w(z)=exp(i*&phi;*z)*(z-a)/(1-a'*z), miss&auml; &phi; on rotaatiokerroin ja
+      a' on a:n kompleksikonjugaatti.
+      </p>
+      <h4>Potenssifunktio</h4>
+      Potenssifunktio on muotoa w(z)=z<sup>&alpha;</sup> oleva kuvaus. Se on konforminen
+      kompleksitasolta sopivalle Riemannin pinnalle muualla paitsi origossa,
+      miss&auml; se k&auml;&auml;nt&auml;&auml; kulman &alpha;-kertaiseksi.
+      Potenssifunktio on alkeellisin esimerkki Schwarz-Christoffel-integraalikaavasta,
+      joka k&auml;sitell&auml;&auml;n j&auml;ljemp&auml;n&auml;.
+
+    <h3>Schwarz-Christoffel-integraalikaava</h3>
+      <p>On todistettu, ett&auml; jos funktio w toteuttaa differentiaaliyht&auml;l&ouml;n
+
+      <p>
+      w'(z)=B &prod;<sub>k</sub> (z - z<sub>k</sub>)<sup>-
+      &alpha;<sub>k</sub>/&pi;</sup>,
+      </p>
+
+      miss&auml; kukin <i>alkukulma</i> z<sub>k</sub> on reaaliluku,
+      niin se kuvaa ylemm&auml;n puolitason konformisesti monikulmioksi, jonka
+      kulmien suuruudet ovat &alpha;<sub>k</sub> radiaania kukin. Schwarz-Christoffel-
+      parametriongelmaksi, joka voi joskus olla eritt&auml;in monimutkainen, sanotaan
+      alkukulmien z<sub>k</sub> m&auml;&auml;ritt&auml;mist&auml; sopivasti niin,
+      ett&auml; lopullisten kulmien koordinaatit w<sub>k</sub> ovat kohdallaan.</p>
+
+      <p>Halutaan esimerkiksi funktio, joka kuvaa ylemm&auml;n puolitason
+      ensimm&auml;iseksi nelj&auml;nnekseksi. T&auml;llaista varten
+      &alpha;<sub>1</sub>=&pi;/2 (ainoa kulma), ja siis
+
+      <p>
+      w'(z)=B z<sup>-1/2</sup>,
+      </p>
+
+      jolloin siis w(z)=(1/2)B z<sup>1/2</sup> ja valitsemalla B sopivasti, saadaan
+      w(z)=z<sup>1/2</sup>, kuten pitikin. Alla olevasta kuvasta n&auml;kyy, mit&auml;
+      tapahtuu kun ylemm&auml;ss&auml; puolitasossa sijaitsevaa suorakulmaisen
+      koordinaatiston pisteist&ouml;&auml; taitetaan n&auml;in.</p>
+
+      <img src="neljannes.jpg" height="300" align="LEFT">
+
+      <p>Jos alkukulmia on kaksi suoraa kulmaa,
+      p&auml;&auml;dyt&auml;&auml;n tyypillisesti k&auml;&auml;nteisiin 
+      trigonometrisiin
+      funktioihin, mutta monissa muissa tapauksissa kyseeseen tulevat korkeammat
+      transkendenttiset funktiot, joita voi laskea ainoastaan numeerisella 
+      integroinnilla.</p>
+
+    <h3>Oskulaatioalgoritmit</h3>
+      Oskulaatioalgoritmien yleisen&auml; tarkoituksena on vaiheittain muokata
+      yksikk&ouml;kiekon sis&auml;inen kompleksitason alue
+      per&auml;tt&auml;isill&auml; konformikuvauksilla yksikk&ouml;kiekoksi.
+      Usein eri vaiheiden konstruoinnissa k&auml;ytet&auml;&auml;n hyv&auml;ksi
+      jotakin alkuper&auml;isen alueen &auml;&auml;rimm&auml;isyysominaisuutta,
+      kuten origosta l&auml;hinn&auml; olevaa pistett&auml; tai ter&auml;vint&auml;
+      ulosp&auml;in avautuvaa kulmaa. L&auml;himp&auml;&auml;n pisteeseen
+      perustuvia oskulaatioalgoritmeja sanotaan joskus ep&auml;virallisesti
+      ''Koebe''-tyyppisiksi ja kulmiin perustuvia ''Grassman''-tyyppisiksi.
+      Kokeellisesti on havaittu, ett&auml; ''Koebe''-tyyppiset menetelm&auml;t
+      ovat yleisk&auml;ytt&ouml;isempi&auml;, Grassman-askeleita otetaan
+      tyypillisesti jonkun v&auml;litt&ouml;m&auml;n sievennyksen tai
+      nopeusedun saamiseksi.
+
+      <h4>Koeben algoritmi</h4>
+      <p>T&auml;m&auml; on tunnetuin oskulaatioalgoritmeista ja sit&auml; on alunperin
+      k&auml;ytetty Riemannin kuvauslauseen todistuksessa. Riemannin kuvauslauseen
+      mukaan kaikilta yhdesti yhten&auml;isilt&auml; alueilta (paitsi koko 
+      kompleksitasosta!) on olemassa konformikuvaus yksikk&ouml;kiekoksi. Algoritmi
+      perustuu siihen, ett&auml; kuvattava alue ensin skaalataan kokonaisuudessaan
+      yksikk&ouml;kiekon sis&auml;&auml;n ja sen j&auml;lkeen siit&auml; valitaan
+      origosta lukien l&auml;hin piste. Kuviota 'siirret&auml;&auml;n' sen
+      j&auml;lkeen yksikk&ouml;kiekon automorfismilla siten, ett&auml; 'minimipiste'
+      asettuu origoon. T&auml;m&auml;n j&auml;lkeen otetaan holomorfinen 
+      neli&ouml;juuri ja suoritetaan automorfismi takaisinp&auml;in 
+      s&auml;ilytt&auml;en alkuper&auml;isen origon kuvan.
+      </p>
+      <p>Seuraavassa on esitetty tarvittavat MATLAB-ohjelmakoodit, sill&auml;
+      n&auml;m&auml; algoritmit muodostavat oskulaatioalgoritmien tutkimuksen
+      'rungon'. Ne voivat kuitenkin olla varsin hitaita tulkattavissa 
+      j&auml;rjestelmiss&auml;, kuten GNU Octavessa, joten vakavampaan
+      k&auml;ytt&ouml;&ouml;n suositellaan C++ - tai FORTRAN-kielisi&auml;
+      implementaatioita.</p>
+
+<h5>adjpolygon_MATLAB.m (laatii monikulmion reunapisteist&ouml;n)</h5>
+<pre>
+function [q,v]=adjpolygon_MATLAB(p,tol)
+
+% usage: [Q,V]=adjpolygon_MATLAB(P,TOL)
+%
+% P is a list of complex numbers forming a counterclockwise-oriented polygon.
+% This function repeatedly checks whether an edge forms an angle of less than
+% TOL. If so, then an edge is split in half in Q to lessen the seriosity of
+% this condition. The iteration stops when the polygon does not need to be
+% altered anymore. List V consists of new vertice indices corresponding to
+% original vertices in P.
+%
+% Author: Mikko Nummelin, 2007, 2008
+
+	if nargin<1
+		error('usage: W=adjpolygon_MATLAB(P,TOL)\n');
+	else if nargin<2
+		tol=.1; % default value for tolerance
+	end
+
+	qtmp=[p,p(1)]; % to make the array circular
+	changes_made=true; % to enter the loop at least once
+
+	while changes_made==true
+		changes_made=false;
+		q=qtmp(1);
+		for k=1:length(qtmp)-1
+
+			% Checks whether an edge in polygon forms an
+			% angle exceeding the tolerance condition. If yes,
+			% then a vertice is added to split the edge in half.
+			if abs(imag(log(qtmp(k+1)/qtmp(k))))>tol
+				av=(qtmp(k)+qtmp(k+1))/2;
+				q=[q,av,qtmp(k+1)];
+				changes_made=true;
+			else
+				q=[q,qtmp(k+1)];
+			end
+		end
+		qtmp=q;
+	end
+	q=q(1:length(q)-1); % chops away the last value
+
+	% Searches for indices of vertices in q corresponding to original
+	% vertices in p.
+	v=zeros(1,length(p));
+	for k=1:length(p)
+		v(k)=find(q-p(k)==0);
+	end
+end
+</pre>
+
+<h5>holsqrt_MATLAB.m (holomorfinen neli&ouml;juuri)</h5>
+<pre>
+function w=holsqrt_MATLAB(z,k)
+
+% usage: W=holsqrt_MATLAB(Z,K)
+%
+% Z is a list of complex numbers approximating a Jordan curve,
+% K is the index of first member (usually this member has value of zero)
+% which is taken to the holomorphic square root.
+%
+% Author: Mikko Nummelin, 2007, 2008
+%
+% BUGS:   NEVER use this in GNU Octave or in any 'production environment'
+%         This implementation is for algorithmic clarification only and
+%         EXTREMELY INEFFICIENT in interpreted systems. Use dynamic
+%         extension versions instead.
+
+	if nargin<1
+		error('usage: W=holsqrt_MATLAB(Z,K)\n');
+	elseif nargin<2
+		k=1;
+	end
+
+	% Resulting array
+	w=zeros(1,length(z));
+
+	% The first member of holomorphic square root should be the value of
+	% complex square root nearest to -i.
+	p=-i;
+	if k < length(z)
+		k1=k+1;
+	else
+		k1=1;
+	end
+
+	while k1 ~= k
+		s=sqrt(z(k1));
+
+		% Chooses the next value of square root so that it is the
+		% alternative located nearest of previous value of hol.
+		% square root.
+		if abs(s-p)>abs(s+p)
+			w(k1)=-s;
+			p=-s;
+		else
+			w(k1)=s;
+			p=s;
+		end
+
+		% Increments the index, but wraps around to 1 at the end of
+		% the array.
+		if k1 < length(z)
+			k1=k1+1;
+		else
+			k1=1;
+		end
+	end
+end
+</pre>
+
+<h5>koebe_step_MATLAB.m (yksitt&auml;inen Koeben algoritmin askel)</h5>
+<pre>
+function [w,m]=koebe_step_MATLAB(z,tol)
+
+% usage: [w,m]=koebe_step_MATLAB(z,tol)
+%
+% Author: Mikko Nummelin, 2007, 2008
+
+	if nargin<1
+		error('usage: W=koebe_step_MATLAB(Z,TOL)\n');
+	elseif nargin < 2
+		tol=.99; % default value for tolerance
+	end
+
+	[m,mindex]=min(z);
+	w=z;
+
+	% The step is accepted only if nearest point from origin is nearer
+	% than the tolerance level.
+	if abs(m) < tol
+
+		% Finds the angle, how much the Jordan-area should be rotated
+		% in order to place the minimum point at the negative real
+		% axis and performs such rotation.
+		rot=-m'/abs(m);
+		w=w.*rot;
+
+		% Performs the Koebe transform by 'translating' the minimum
+		% point onto the origin by unit-disk automorphism and then
+		% performing the holomorphic square root. As we know that
+		% if |z| < 1, then |sqrt(z)| > |z|, this means that the points
+		% in the boundary are transformed slightly nearer the edge
+		% of the unit disk, not however landing outside it.
+		m=abs(m);
+		w=(w+m)./(1+m*w);
+		w=holsqrt_MATLAB(w,mindex);
+		ms=sqrt(m);
+		w=(w-ms)./(1-ms*w);
+
+		% Finally the rotation is reversed for visual effects.
+		w=w.*rot';
+	end
+end
+</pre>
+
+<h5>koebe_MATLAB.m (Itse Koeben algoritmi useilla iteraatioaskeleilla)</h5>
+<pre>
+function w=koebe_MATLAB(z, rounds, tol)
+
+% usage: w=koebe_MATLAB(z, rounds, tol)
+%
+% Author: Mikko Nummelin, 2007, 2008
+
+	if nargin<1
+		error('usage: W=koebe_MATLAB(Z,ROUNDS,TOL)\n');
+	elseif nargin<2
+		rounds=100; % default rounds
+		tol=.99; % default value for tolerance
+	elseif nargin<3
+		tol=.99;
+	end
+
+	% Scales the Jordan-area into the unit disk.
+	[m,mindex]=max(z);
+	w=z./abs(m);
+
+	for k=1:rounds
+		[w,m]=koebe_step_MATLAB(w,tol);
+		if abs(m)>=tol
+			break;
+		end
+	end
+end
+</pre>
+
+<h5>koebe_test_MATLAB.m (Testiohjelma, joka demonstroi edellisten
+k&auml;ytt&ouml;&auml;)</h5>
+<pre>
+% A simple test program for Koebe algorithm implemented in MATLAB.
+% Mikko Nummelin, 2008
+
+1;
+
+p=[0,3,2+i,4+2i,.5+2i];
+p2=p-(.5+.5i);
+[q,v_ind]=adjpolygon_MATLAB(p2,.05);
+plot(q,'*');
+fprintf('Press any key\n');
+pause;
+
+q2=koebe_MATLAB(q,50);
+plot(q2,'r*',exp(i*[0:pi/100:2*pi]),'k-');
+
+% Prints the approximated Schwarz-Christoffel-parameters
+imag(log(q2(v_ind)))
+</pre>
+
+<p>Edell&auml;mainitut koodit ovat saatavissa paketista
+<a href="koebe_MATLAB-1.0.tar.gz">koebe_MATLAB-1.0.tar.gz</a>. Paketti
+puretaan (esimerkiksi) seuraavasti:
+<pre>
+$ zcat koebe_MATLAB-1.0.tar.gz | tar xvf -
+$ cd koebe_MATLAB-1.0/
+</pre>
+</p>
+
+      <h4>Logaritminen Koeben algoritmi</h4>
+       <p>
+       T&auml;m&auml; menetelm&auml; on edellisen parannus, joka 
+       k&auml;ytt&auml;&auml; hyv&auml;kseen <i>holomorfista logaritmia</i>.
+       Kun kompleksinen logaritmi tyypillisesti tarkoittaa:
+       <p>
+       ln(z)=ln|z|+i*arg(z),
+       </p>
+       eli reaaliosa tulee itseisarvon logaritmista ja imaginaariosa suuntakulmasta,
+       niin holomorfisessa logaritmissa edellytet&auml;&auml;n jatkuvuutta samaan
+       tapaan kuin holomorfisessa neli&ouml;juuressakin. T&auml;m&auml; saadaan
+       ohjelmallisesti aikaiseksi siten, ett&auml; kun lasketaan kompleksisen
+       lukujonon logaritmeja, jokaista pistett&auml; kohti verrataan, mik&auml;
+       seuraavista logaritmin arvoista:
+       <p>
+       ln|z|+i*arg(z)+2*i*n*&pi;,<br/>
+       ln|z|+i*arg(z)+2*i*(n+1)*&pi;,<br/>
+       ln|z|+i*arg(z)+2*i*(n-1)*&pi;<br/>
+       </p>
+       on edellist&auml; logaritmin arvoa l&auml;hinn&auml; ja tarvittaessa
+       sen perusteella muutetaan haaraa <i>n</i>. Holomorfinen logaritmi siis
+	otetaan holomorfisen neli&ouml;juuren sijasta ja t&auml;ll&auml; tavalla
+	varmistetaan alueen kuvautuminen vasempaan puolitasoon. Origon kuva
+	pidet&auml;&auml;n muistissa ja kuvaa skaalataan niin, ett&auml; 
+	t&auml;m&auml; p&auml;&auml;tyy pisteeseen -1. Toteutettaessa 
+	t&auml;m&auml;n j&auml;lkeen sopiva Cayleyn muunnos, saadaan origon kuva 
+	takaisin origoon ja aiempi 'minimipiste' yksikk&ouml;kiekon reunalle.
+       </p>
+
+	<p>Edell&auml;mainitun logaritmisen Koeben algoritmin koodit ovat
+	saatavissa paketista
+	<a href="logkoebe_MATLAB-1.1.tar.gz">logkoebe_MATLAB-1.1.tar.gz</a>.
+	Hakemisto sis&auml;lt&auml;&auml; testitiedoston, joka osoittaa oikean
+	k&auml;ytt&ouml;tavan.</p>
+
+      <h4>Sinh-log-menetelm&auml;</h4>
+	<p>T&auml;ss&auml; menetelm&auml;ss&auml; logaritmin ja sopivan skaalauksen
+	j&auml;lkeen otetaan hyperbolinen sini, jolloin aluetta saadaan huomattavasti
+	laajennettua vasemmassa puolitasossa. Koska hyperbolinen sini kuitenkin
+	m&auml;&auml;ritell&auml;&auml;n: w(z)=(exp(i*z)-exp(-i*z))/2,
+	tarkoittaa t&auml;m&auml; my&ouml;s mahdollisten virheiden eksponentiaalista
+	kasautumista. T&auml;m&auml; tekee 'perusmuotoisen' hyperbolisen sinin
+	menetelm&auml;n ep&auml;stabiiliksi.</p>
+	
+	<p>Menetelm&auml;&auml; voidaan parantaa tekem&auml;ll&auml; v&auml;liss&auml;
+	sopiva napakoordinaatistomuunnos ja k&auml;ytt&auml;m&auml;ll&auml; hyv&auml;ksi
+	'puolikiekkomuunnosta'
+	<p>
+	w(z)=(z^2+2*z-1)/(-z^2+2*z+1)
+	</p>
+	joka kuvaa konformisesti oikean yksikk&ouml;puolikiekon koko yksikk&ouml;kiekoksi.
+	Ks. t&auml;st&auml; kaikki edell&auml;mainitutkin ohjelmat sis&auml;lt&auml;v&auml;st&auml;
+	paketista
+	<ul>
+	  <li><a href="oscpack_MATLAB-0.9.tar.gz">oscpack_MATLAB-0.9.tar.gz</a></li>
+	  <li><a href="oscpack_MATLAB-0.9.zip">oscpack_MATLAB-0.9.zip</a></li>
+	</ul>
+	sinhlog-alkuisia tiedostoja ja kaikkia ym. algoritmeja esittelev&auml;&auml;
+	testiskripti&auml; <code>labyrinth_SC_parameter_test_MATLAB.m</code>.
+  <hr/>
+	<h4>Graafinen esimerkki</h4>
+	Seuraavassa on esimerkkin&auml; eri oskulaatioalgoritmien vaikutukset
+	alkuper&auml;iseen monikulmioon (vas. ylh&auml;&auml;ll&auml;).
+	Kussakin muussa kuvassa on otettu yksi askel kutakin
+	standardioskulaatioalgoritmia, Koeben algoritmia (oik. ylh.),
+	logaritmista Koeben algoritmia (vas. alh.) ja sinh-log-Koeben algoritmia
+	(oik. alh.).
+	<table>
+	<tr>
+	  <td><img src="labyrinth.jpg">
+	  <td><img src="labyrinth_koebe.jpg">
+	<tr>
+	  <td><img src="labyrinth_logkoebe.jpg">
+	  <td><img src="labyrinth_sinhlog.jpg">
+	</table>
+  <hr/>
+  <A href="mailto: mikko_DOT_nummelin_AT_tkk_DOT_fi">Mikko Nummelin</A>
+  </BODY>
+</HTML>

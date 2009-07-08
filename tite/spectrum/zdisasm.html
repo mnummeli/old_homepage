@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <HEAD>
+    <TITLE>Mikko Nummelin - Zdisasm - Z80 disassembleri</TITLE>
+    <META name="Author" content="Mikko Nummelin">
+    <META name="keywords" content="Mikko Nummelin, kotisivu, Z80, disassembler,
+	ohjelma, retro">
+    <LINK href="spectrum.css" rel="stylesheet" type="text/css">
+  </HEAD>
+
+  <BODY>
+  <a href="index.html">Yl&ouml;s</a>
+  <a href="zdisasm.en.html">Englanniksi</a>
+
+  <hr/>
+
+  <h1>Zdisasm - Z80 disassembleri</h1>
+  <hr/>
+
+  <h2>Lisenssi</h2>
+  <p>Zdisasm on ilmaisjakelussa oleva Z80-disassembleri. Voit vapaasti jakaa
+  sen muuttamatonta l&auml;hdekoodipakettia tai binaareja, kuitenkaan ilman
+  oikeutta peri&auml; niistä maksua. Laajemmat oikeudet vaativat allekirjoittaneen
+  (Mikko Nummelin) kirjallisen luvan tehdä niin.<p>
+  
+  <p>Ohjelman mukana olevan testibinaaritiedoston JETSET.MEM
+  sis&auml;lt&auml;m&auml;n Z80-ohjelmakoodin on laatinut Matthew Smith.
+  Kyseinen ohjelma ei ole en&auml;&auml; kaupallisessa k&auml;yt&ouml;ss&auml;
+  ja useilla Internet-sivuilla ilmaisjaossa.</p>
+
+  <p>Ohjelman toimivuudesta EI OLE MITÄÄN TAKUUTA, ei edes mahdollisista
+  ohjelmistojen tai laitteistojen vahingoista, mit&auml; sen k&auml;ytt&ouml;
+  saattaisi aiheuttaa, eik&auml; sopivuudesta mihink&auml;&auml;n
+  erityiseen tarkoitukseen.</p>
+
+  <p>Kaikki muut oikeudet pid&auml;tet&auml;&auml;n.<p>
+
+  <p>(c) 2002, 2005, Mikko Nummelin</p>
+
+  <hr/>
+
+<h2>K&auml;&auml;nt&auml;minen ja asennus</h2>
+<pre class="example">
+$ make
+</pre>
+<hr>
+<h2>K&auml;ytt&ouml;</h2>
+<p>Ohjelma tarvitsee binaaritiedoston, joka sis&auml;lt&auml;&auml;
+palan Z80-prosessoriin perustuneen laitteen muistiavaruudesta.
+T&auml;m&auml;n ohjelman mukana tulee esimerkkin&auml; Matthew
+Smith:in ohjelmoiman "Jet Set Willy":n binaari ladattuna Sinclair
+ZX Spectrumin muistialueelle 8000h-FFFFh.</p>
+
+<p>Esimerkkisessio kommentteineen:<br>
+<pre class="example">
+$ zdisasm -m 8000 -if JETSET.MEM
+zdisasm: Virtual memory starts from 8000
+zdisasm: Reading from JETSET.MEM
+> 
+</pre>
+Yll&auml;olevassa zdisasm laitetaan olettamaan JETSET.MEM:in
+sijaitsevan muistialueella 8000h-FFFFh.
+<pre class="example">
+> m 8400
+zdisasm: Pointer moved to 8400
+>  
+</pre>
+T&auml;m&auml; merkitsee, ett&auml; k&auml;skyj&auml; listataan
+osoitteesta 8400h alkaen (alkuper&auml;inen JSW:n aloituspiste):
+<pre class="example">
+> l 10
+zdisasm: Listing 10 instructions ...
+8400 di               F3
+8401 ld hl,5BFF       21FF5B
+8404 ld (hl),86       3686
+8406 dec hl           2B
+8407 ld (hl),9F       369F
+8409 ld sp,5BFE       31FE5B
+840C jp 87CA          C3CA87
+840F ld a,(bc)        0A
+8410 ld b,a           47
+8411 inc b            04
+>  
+</pre>
+Osoitinta on mahdollista siirt&auml;&auml;
+<pre class="example">
+> m 87CA
+zdisasm: Pointer moved to 87CA
+> l 15
+zdisasm: Listing 15 instructions ...
+87CA xor a            AF
+87CB ld (85CE),a      32CE85
+87CE ld (85E1),a      32E185
+87D1 ld (85CD),a      32CD85
+87D4 ld (85D1),a      32D185
+87D7 ld (85CB),a      32CB85
+87DA ld (85E0),a      32E085
+87DD ld (85DF),a      32DF85
+87E0 ld a,07          3E07
+87E2 ld (85CC),a      32CC85
+87E5 ld a,D0          3ED0
+87E7 ld (85CF),a      32CF85
+87EA ld a,21          3E21
+87EC ld (8420),a      322084
+87EF ld hl,5DB4       21B45D
+> 
+</pre>
+Jos haluat poistua zdisasm:ista, kirjoita
+<pre class="example">
+> q
+zdisasm: Program finished successfully.
+</pre>
+</p>
+<hr/>
+<h2>L&auml;hdekoodi:</h2>
+<a href="zdisasm-0.3.tar.gz">zdisasm-0.3</a>
+<hr/>
+<p>
+</body>
+</html>
